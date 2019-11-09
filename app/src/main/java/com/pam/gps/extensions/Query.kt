@@ -1,6 +1,5 @@
 package com.pam.gps.extensions
 
-import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
@@ -12,13 +11,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
 @ExperimentalCoroutinesApi
-fun Query.toFlow(): Flow<QuerySnapshot?> {
+fun Query.asFlow(): Flow<QuerySnapshot?> {
   return callbackFlow {
     val onSnapShotListener = EventListener<QuerySnapshot> { snapshot, exception ->
       if (exception != null) cancel(CancellationException("FireStore Error", exception))
       offer(snapshot)
     }
-    val registration = this@toFlow.addSnapshotListener(onSnapShotListener)
+    val registration = this@asFlow.addSnapshotListener(onSnapShotListener)
     awaitClose { registration.remove() }
   }
 }

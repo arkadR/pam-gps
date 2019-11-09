@@ -5,9 +5,9 @@ import androidx.lifecycle.liveData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 
-fun <T> Flow<T>.toLiveData() : LiveData<T> {
+fun <T> Flow<T>.asLiveData() : LiveData<T> {
   return liveData {
-    this@toLiveData.collect {
+    this@asLiveData.collect {
       emit(it)
     }
   }

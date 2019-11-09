@@ -1,9 +1,8 @@
 package com.pam.gps.repositories
 
-import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.pam.gps.extensions.toFlow
+import com.pam.gps.extensions.asFlow
 import com.pam.gps.model.Tour
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
@@ -17,7 +16,7 @@ open class ToursRepository  {
       .collection("users")
       .document(userId)
       .collection("tours")
-      .toFlow()
+      .asFlow()
       .filterNotNull()
       .mapNotNull { it.toObjects(Tour::class.java) }
   }
