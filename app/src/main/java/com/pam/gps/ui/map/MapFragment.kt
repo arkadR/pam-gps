@@ -1,11 +1,11 @@
 package com.pam.gps.ui.map
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 
 import com.pam.gps.R
 
@@ -15,7 +15,7 @@ class MapFragment : Fragment() {
     fun newInstance() = MapFragment()
   }
 
-  private lateinit var viewModel: MapViewModel
+  private val mapViewModel by viewModels<MapViewModel>()
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -26,8 +26,6 @@ class MapFragment : Fragment() {
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
-    viewModel = ViewModelProviders.of(this).get(MapViewModel::class.java)
-    // TODO: Use the ViewModel
   }
 
 }

@@ -1,11 +1,11 @@
 package com.pam.gps.ui.currentTrip
 
-import androidx.lifecycle.ViewModelProviders
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.viewModels
 
 import com.pam.gps.R
 
@@ -15,7 +15,7 @@ class CurrentTripFragment : Fragment() {
     fun newInstance() = CurrentTripFragment()
   }
 
-  private lateinit var viewModel: CurrentTripViewModel
+  private val tripViewModel by viewModels<CurrentTripViewModel>()
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -26,8 +26,6 @@ class CurrentTripFragment : Fragment() {
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
-    viewModel = ViewModelProviders.of(this).get(CurrentTripViewModel::class.java)
-    // TODO: Use the ViewModel
   }
 
 }

@@ -9,6 +9,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
 open class ToursRepository  {
+
   private val instance = Firebase.firestore
 
   @ExperimentalCoroutinesApi
