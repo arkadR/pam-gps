@@ -20,7 +20,8 @@ import timber.log.Timber
 
 class HomeFragment : Fragment() {
 
-  @ExperimentalCoroutinesApi private val toursViewModel by viewModels<ToursViewModel>()
+  @ExperimentalCoroutinesApi
+  private val toursViewModel by viewModels<ToursViewModel>()
 
   @ExperimentalCoroutinesApi
   override fun onCreateView(
@@ -29,23 +30,23 @@ class HomeFragment : Fragment() {
     savedInstanceState: Bundle?
   ): View? {
     val root = inflater.inflate(R.layout.fragment_home, container, false)
-    val textView: TextView = root.findViewById(R.id.text_home)
-    toursViewModel.tours.observe(viewLifecycleOwner, Observer {
-      textView.text = it[0].title
-    })
+//    val textView: TextView = root.findViewById(R.id.text_home)
+//    toursViewModel.tours.observe(viewLifecycleOwner, Observer {
+//      textView.text = it[0].title
+//    })
     return root
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    view.findViewById<View>(R.id.button_home).setOnClickListener {
-/*      val action = HomeFragmentDirections
-        .actionHomeFragmentToHomeSecondFragment("From HomeFragment")
-      NavHostFragment.findNavController(this@HomeFragment)
-        .navigate(action)*/
-      Timber.d("Signing out")
-        FirebaseAuth.getInstance().signOut()
-    }
+//    view.findViewById<View>(R.id.button_home).setOnClickListener {
+///*      val action = HomeFragmentDirections
+//        .actionHomeFragmentToHomeSecondFragment("From HomeFragment")
+//      NavHostFragment.findNavController(this@HomeFragment)
+//        .navigate(action)*/
+//      Timber.d("Signing out")
+//        FirebaseAuth.getInstance().signOut()
+//    }
   }
 }

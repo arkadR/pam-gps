@@ -27,16 +27,16 @@ class MainActivity : AppCompatActivity() {
     // menu should be considered as top level destinations.
     val appBarConfiguration = AppBarConfiguration(
       setOf(
-        R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+        R.id.navigation_trip, R.id.navigation_home, R.id.navigation_map
       )
     )
     setupActionBarWithNavController(navController, appBarConfiguration)
     navView.setupWithNavController(navController)
 
-    loginViewModel.authStatus.observe(this, Observer {
-      if (it == LoginViewModel.AuthStatus.NOT_AUTHENTICATED)
-        navController.navigate(R.id.loginFragment)
-    })
+//    loginViewModel.authStatus.observe(this, Observer {
+//      if (it == LoginViewModel.AuthStatus.NOT_AUTHENTICATED)
+//        navController.navigate(R.id.loginFragment)
+//    })
   }
 
 }
