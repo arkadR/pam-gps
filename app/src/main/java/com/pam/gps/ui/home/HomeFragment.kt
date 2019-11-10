@@ -8,10 +8,15 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
 import com.pam.gps.R
 import com.pam.gps.ui.tours.ToursViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class HomeFragment : Fragment() {
 
@@ -35,10 +40,12 @@ class HomeFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
     view.findViewById<View>(R.id.button_home).setOnClickListener {
-      val action = HomeFragmentDirections
+/*      val action = HomeFragmentDirections
         .actionHomeFragmentToHomeSecondFragment("From HomeFragment")
       NavHostFragment.findNavController(this@HomeFragment)
-        .navigate(action)
+        .navigate(action)*/
+      Timber.d("Signing out")
+        FirebaseAuth.getInstance().signOut()
     }
   }
 }

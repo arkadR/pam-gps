@@ -10,4 +10,7 @@
     <string name="title_notifications">Notifications</string>
 
     <string name="home_second">Home Second</string>
+    <string name="login_hint">username</string>
+    <string name="password_hint">password</string>
+    <string name="login_button">login</string>
 </resources>
