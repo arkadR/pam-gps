@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.pam.gps.R
 import kotlinx.android.synthetic.main.login_fragment.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class LoginFragment : Fragment() {
 
