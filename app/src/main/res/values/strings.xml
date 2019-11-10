@@ -8,9 +8,11 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_sign_in">Sign in</string>
 
     <string name="home_second">Home Second</string>
     <string name="login_hint">username</string>
     <string name="password_hint">password</string>
     <string name="login_button">login</string>
+    <string name="forgot_password_button">FORGOT PASSWORD</string>
 </resources>

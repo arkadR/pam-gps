@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
@@ -24,20 +26,16 @@ class LoginViewModel : ViewModel() {
       Timber.d("user = $user")
       if (user == null) {
         offer(AuthStatus.NOT_AUTHENTICATED)
-      }
-      else offer(AuthStatus.AUTHENTICATED)
+      } else offer(AuthStatus.AUTHENTICATED)
     }
     FirebaseAuth.getInstance().addAuthStateListener(listener)
     awaitClose { FirebaseAuth.getInstance().removeAuthStateListener(listener) }
   }.asLiveData()
 
-  fun authenticate(username: String, password: String) {
-    viewModelScope.launch {
-      Timber.d("Signing in with username = $username, password = $password")
-      FirebaseAuth
-        .getInstance()
-        .signInWithEmailAndPassword(username, password)
-        .await()
-    }
+  fun authenticate(username: String, password: String): Task<AuthResult> {
+    Timber.d("Signing in with username = $username, password = $password")
+    return FirebaseAuth
+      .getInstance()
+      .signInWithEmailAndPassword(username, password)
   }
 }

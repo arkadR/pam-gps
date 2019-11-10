@@ -10,23 +10,9 @@
         android:name="com.pam.gps.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
-
         <action
-            android:id="@+id/action_HomeFragment_to_HomeSecondFragment"
-            app:destination="@id/navigation_home_second" />
-    </fragment>
-    <fragment
-        android:id="@+id/navigation_home_second"
-        android:name="com.pam.gps.ui.home.HomeSecondFragment"
-        android:label="@string/home_second"
-        tools:layout="@layout/fragment_home_second">
-        <action
-            android:id="@+id/action_HomeSecondFragment_to_HomeFragment"
-            app:destination="@id/navigation_home" />
-
-        <argument
-            android:name="myArg"
-            app:argType="string" />
+            android:id="@+id/action_navigation_home_to_login_navigation"
+            app:destination="@id/login_navigation" />
     </fragment>
 
     <fragment
@@ -40,9 +26,14 @@
         android:name="com.pam.gps.ui.notifications.NotificationsFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
-    <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.pam.gps.ui.login.LoginFragment"
-        android:label="login_fragment"
-        tools:layout="@layout/login_fragment" />
+    <navigation
+        android:id="@+id/login_navigation"
+        android:label="loginFlow"
+        app:startDestination="@id/login_fragment">
+        <fragment
+            android:id="@+id/login_fragment"
+            android:name="com.pam.gps.ui.login.LoginFragment"
+            android:label="@string/title_sign_in"
+            tools:layout="@layout/login_fragment" />
+    </navigation>
 </navigation>
