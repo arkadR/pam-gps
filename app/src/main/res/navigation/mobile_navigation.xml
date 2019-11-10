@@ -10,13 +10,16 @@
         android:name="com.pam.gps.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_navigation_home_to_login_navigation"
+            app:destination="@id/login_navigation" />
     </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.pam.gps.ui.login.LoginFragment"
         android:label="Log in"
-        tools:layout="@layout/login_fragment" />
+        tools:layout="@layout/fragment_login" />
     <fragment
         android:id="@+id/navigation_trip"
         android:name="com.pam.gps.ui.currentTrip.CurrentTripFragment"
@@ -27,4 +30,15 @@
         android:name="com.pam.gps.ui.map.MapFragment"
         android:label="@string/title_map"
         tools:layout="@layout/fragment_map" />
+
+    <navigation
+        android:id="@+id/login_navigation"
+        android:label="loginFlow"
+        app:startDestination="@id/login_fragment">
+        <fragment
+            android:id="@+id/login_fragment"
+            android:name="com.pam.gps.ui.login.LoginFragment"
+            android:label="@string/title_sign_in"
+            tools:layout="@layout/fragment_login" />
+    </navigation>
 </navigation>
