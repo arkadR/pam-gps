@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.pam.gps.R
 import com.pam.gps.extensions.clicks
@@ -28,6 +30,21 @@ class LoginFragment : Fragment() {
     return inflater.inflate(R.layout.fragment_login, container, false)
   }
 
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    viewModel.authStatus.observe(
+      viewLifecycleOwner,
+      Observer {
+        if (it == LoginViewModel.AuthStatus.AUTHENTICATED) {
+          while(findNavController().popBackStack()){}
+          findNavController().navigate(R.id.navigation_home)
+        }
+      })
+
+  }
+
+
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
     //TODO Replace with DataBinding
@@ -44,10 +61,5 @@ class LoginFragment : Fragment() {
         }
       }
     }
-
-    viewModel.authStatus.observe(
-      viewLifecycleOwner,
-      Observer { if (it == LoginViewModel.AuthStatus.AUTHENTICATED) findNavController().popBackStack() })
   }
-
 }

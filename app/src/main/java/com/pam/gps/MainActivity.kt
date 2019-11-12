@@ -42,10 +42,13 @@ class MainActivity : AppCompatActivity() {
     loginViewModel.authStatus.observe(this, Observer {
       if (it == LoginViewModel.AuthStatus.NOT_AUTHENTICATED
         && navController.currentDestination?.label !in listOf(resources.getString(R.string.title_sign_in))
-      )
-        navController.navigate(R.id.action_navigation_home_to_login_navigation)
+      ) {
+        while (navController.popBackStack()) { }
+        navController.navigate(R.id.action_global_login_navigation)
+      }
     })
   }
+
 
   private fun hideBottomNavigation() {
     nav_view.run {
