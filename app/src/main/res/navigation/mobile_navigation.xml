@@ -10,33 +10,32 @@
         android:name="com.pam.gps.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
-
     <fragment
         android:id="@+id/navigation_trip"
         android:name="com.pam.gps.ui.currentTrip.CurrentTripFragment"
         android:label="@string/title_trip"
-        tools:layout="@layout/fragment_current_trip" />
+        tools:layout="@layout/fragment_current_trip">
+
+    </fragment>
     <fragment
         android:id="@+id/navigation_map"
         android:name="com.pam.gps.ui.map.MapFragment"
         android:label="@string/title_map"
         tools:layout="@layout/fragment_map" />
-
-    <navigation
-        android:id="@+id/login_navigation"
-        android:label="loginFlow"
-        app:startDestination="@id/login_fragment">
-        <fragment
-            android:id="@+id/login_fragment"
-            android:name="com.pam.gps.ui.login.LoginFragment"
-            android:label="@string/title_sign_in"
-            tools:layout="@layout/fragment_login">
-            <action
-                android:id="@+id/action_login_fragment_to_mobile_navigation"
-                app:destination="@id/mobile_navigation" />
-        </fragment>
-    </navigation>
+    <fragment
+        android:id="@+id/navigation_login"
+        android:name="com.pam.gps.ui.login.LoginFragment"
+        android:label="@string/title_sign_in"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_navigation_login_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_login"
+            app:popUpToInclusive="true"/>
+    </fragment>
     <action
-        android:id="@+id/action_global_login_navigation"
-        app:destination="@id/login_navigation" />
+        android:id="@+id/action_navigation_home_to_navigation_login"
+        app:destination="@id/navigation_login"
+        app:popUpTo="@id/navigation_home"
+        app:popUpToInclusive="true" />
 </navigation>

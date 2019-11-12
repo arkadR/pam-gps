@@ -27,14 +27,14 @@ class MainActivity : AppCompatActivity() {
     // menu should be considered as top level destinations.
     val appBarConfiguration = AppBarConfiguration(
       setOf(
-        R.id.navigation_trip, R.id.navigation_home, R.id.navigation_map, R.id.login_fragment
+        R.id.navigation_trip, R.id.navigation_home, R.id.navigation_map, R.id.navigation_login
       )
     )
     setupActionBarWithNavController(navController, appBarConfiguration)
     navView.setupWithNavController(navController)
     navController.addOnDestinationChangedListener { _, destination, _ ->
       when (destination.id) {
-        R.id.login_fragment -> hideBottomNavigation()
+        R.id.navigation_login -> hideBottomNavigation()
         else -> showBottomNavigation()
       }
     }
@@ -43,8 +43,7 @@ class MainActivity : AppCompatActivity() {
       if (it == LoginViewModel.AuthStatus.NOT_AUTHENTICATED
         && navController.currentDestination?.label !in listOf(resources.getString(R.string.title_sign_in))
       ) {
-        while (navController.popBackStack()) { }
-        navController.navigate(R.id.action_global_login_navigation)
+        navController.navigate(R.id.action_navigation_home_to_navigation_login)
       }
     })
   }

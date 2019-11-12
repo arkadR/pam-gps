@@ -37,8 +37,7 @@ class LoginFragment : Fragment() {
       viewLifecycleOwner,
       Observer {
         if (it == LoginViewModel.AuthStatus.AUTHENTICATED) {
-          while(findNavController().popBackStack()){}
-          findNavController().navigate(R.id.navigation_home)
+          findNavController().navigate(R.id.action_navigation_login_to_navigation_home)
         }
       })
 
