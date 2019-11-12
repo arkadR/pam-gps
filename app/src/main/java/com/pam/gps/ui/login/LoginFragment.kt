@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.pam.gps.R
 import com.pam.gps.extensions.clicks
 import kotlinx.android.synthetic.main.fragment_login.*
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -46,19 +47,18 @@ class LoginFragment : Fragment() {
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
-    //TODO Replace with DataBinding
-    lifecycleScope.launch {
-      login_button.clicks().collect {
-        try {
-          viewModel.authenticate(
-            username_text.text.toString(),
-            password_text.text.toString()
-          ).await()
-        } catch (e: Exception) {
-          //TODO Error Handling
-          Timber.e(e.localizedMessage)
-        }
+    //TODO Error handling
+    val handler = CoroutineExceptionHandler { _, throwable ->
+      when (throwable) {
+        is Exception -> Timber.e(throwable)
       }
+    }
+    login_button.setOnClickListener {
+      viewModel.authenticate(
+        username_text.text.toString(),
+        password_text.text.toString(),
+        handler
+      )
     }
   }
 }
