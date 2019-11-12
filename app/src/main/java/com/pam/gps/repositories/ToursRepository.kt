@@ -5,6 +5,7 @@ import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import com.pam.gps.extensions.asFlow
 import com.pam.gps.model.Tour
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
@@ -19,7 +20,9 @@ open class ToursRepository  {
       .document(userId)
       .collection("tours")
       .asFlow()
+      .flowOn(Dispatchers.IO)
       .filterNotNull()
       .mapNotNull { it.toObjects<Tour>() }
+      .flowOn(Dispatchers.Default)
   }
 }

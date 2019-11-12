@@ -15,7 +15,10 @@
         android:name="com.pam.gps.ui.currentTrip.CurrentTripFragment"
         android:label="@string/title_trip"
         tools:layout="@layout/fragment_current_trip">
-
+        <action
+            android:id="@+id/action_navigation_trip_to_navigation_login"
+            app:destination="@id/navigation_login"
+            app:popUpTo="@id/mobile_navigation" />
     </fragment>
     <fragment
         android:id="@+id/navigation_map"

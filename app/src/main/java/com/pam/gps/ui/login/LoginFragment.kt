@@ -7,17 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.pam.gps.R
-import com.pam.gps.extensions.clicks
 import kotlinx.android.synthetic.main.fragment_login.*
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
 class LoginFragment : Fragment() {
@@ -35,12 +28,10 @@ class LoginFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
     viewModel.authStatus.observe(
-      viewLifecycleOwner,
-      Observer {
-        if (it == LoginViewModel.AuthStatus.AUTHENTICATED) {
-          findNavController().navigate(R.id.action_navigation_login_to_navigation_home)
-        }
-      })
+      viewLifecycleOwner, Observer {
+        findNavController().navigate(R.id.action_navigation_login_to_navigation_home)
+      }
+    )
 
   }
 

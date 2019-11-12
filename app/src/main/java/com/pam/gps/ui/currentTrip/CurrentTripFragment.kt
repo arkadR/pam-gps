@@ -1,17 +1,15 @@
 package com.pam.gps.ui.currentTrip
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
-
 import com.pam.gps.R
-import com.pam.gps.extensions.clicks
 import kotlinx.android.synthetic.main.fragment_current_trip.*
-import kotlinx.coroutines.flow.collect
 
 class CurrentTripFragment : Fragment() {
 
@@ -32,6 +30,7 @@ class CurrentTripFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     sign_out_button.setOnClickListener {
       FirebaseAuth.getInstance().signOut()
+      findNavController().navigate(R.id.action_navigation_trip_to_navigation_login)
     }
   }
 

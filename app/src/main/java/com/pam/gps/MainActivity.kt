@@ -2,20 +2,17 @@ package com.pam.gps
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.pam.gps.ui.login.LoginViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  private val loginViewModel by viewModels<LoginViewModel>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -39,13 +36,8 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    loginViewModel.authStatus.observe(this, Observer {
-      if (it == LoginViewModel.AuthStatus.NOT_AUTHENTICATED
-        && navController.currentDestination?.label !in listOf(resources.getString(R.string.title_sign_in))
-      ) {
+    if(FirebaseAuth.getInstance().currentUser == null)
         navController.navigate(R.id.action_navigation_home_to_navigation_login)
-      }
-    })
   }
 
 
