@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".ui.map.MapFragment">
 
-    <TextView
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:apiKey="@string/google_maps_key"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Hello" />
-
+        android:layout_height="match_parent" />
 </FrameLayout>
