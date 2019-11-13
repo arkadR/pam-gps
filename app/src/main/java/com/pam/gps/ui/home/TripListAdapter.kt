@@ -8,7 +8,7 @@ import com.pam.gps.R
 import com.pam.gps.model.Trip
 import kotlinx.android.synthetic.main.card_trip.view.*
 
-class TripAdapter : RecyclerView.Adapter<TripAdapter.TripViewHolder>() {
+class TripListAdapter : RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
 
   private var data: List<Trip> = emptyList()
 
@@ -16,14 +16,14 @@ class TripAdapter : RecyclerView.Adapter<TripAdapter.TripViewHolder>() {
 
   override fun getItemCount(): Int = data.size
 
-  override fun onBindViewHolder(holder: TripAdapter.TripViewHolder, position: Int) {
+  override fun onBindViewHolder(holder: TripListAdapter.TripViewHolder, position: Int) {
     holder.view.apply {
       txtTripTitle.text = data[position].title
 //      txtTripDate.text = data[position].date?.toString() ?: ""
     }
   }
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripAdapter.TripViewHolder {
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripListAdapter.TripViewHolder {
     val itemView = LayoutInflater
       .from(parent.context)
       .inflate(R.layout.card_trip, parent, false) as CardView

@@ -18,7 +18,7 @@ class HomeFragment : Fragment() {
   @ExperimentalCoroutinesApi
   private val toursViewModel by viewModels<TripsViewModel>()
 
-  private val viewAdapter: TripAdapter = TripAdapter()
+  private val viewAdapter: TripListAdapter = TripListAdapter()
 
   @ExperimentalCoroutinesApi
   override fun onCreateView(
@@ -39,14 +39,5 @@ class HomeFragment : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-
-//    view.findViewById<View>(R.id.button_home).setOnClickListener {
-///*      val action = HomeFragmentDirections
-//        .actionHomeFragmentToHomeSecondFragment("From HomeFragment")
-//      NavHostFragment.findNavController(this@HomeFragment)
-//        .navigate(action)*/
-//      Timber.d("Signing out")
-//        FirebaseAuth.getInstance().signOut()
-//    }
   }
 }
