@@ -2,6 +2,6 @@ package com.pam.gps.model
 
 import java.util.*
 
-data class Tour(
+data class Trip(
   val title: String = "") {
 }

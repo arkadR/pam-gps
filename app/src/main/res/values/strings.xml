@@ -13,12 +13,7 @@
 
     <string name="home_second">Home Second</string>
 
-    <string name="tripCardTitlePlaceholder">Title</string>
-    <string name="tripCardDatePlaceholder">Date</string>
-    <string name="tripCardDistancePlaceholder">Distance</string>
-    <string name="tripCardEditButtonPlaceholder">Edit</string>
-    <string name="tripCardShareButtonPlaceholder">Share</string>
-    <string name="tripCardImageDescription">Photo identifier of the displayed trip</string>
+
 
     <string name="login_hint">username</string>
     <string name="password_hint">password</string>

@@ -4,22 +4,22 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import com.pam.gps.extensions.asFlow
-import com.pam.gps.model.Tour
+import com.pam.gps.model.Trip
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 
-open class ToursRepository  {
+open class TripsRepository  {
 
   private val instance = Firebase.firestore
 
   @ExperimentalCoroutinesApi
-  fun getTours(userId: String): Flow<List<Tour>> {
+  fun getTrips(userId: String): Flow<List<Trip>> {
     return instance
       .collection("users")
       .document(userId)
-      .collection("tours")
+      .collection("tours") //TODO[AR]: Change that to trips
       .asFlow()
       .filterNotNull()
-      .mapNotNull { it.toObjects<Tour>() }
+      .mapNotNull { it.toObjects<Trip>() }
   }
 }
