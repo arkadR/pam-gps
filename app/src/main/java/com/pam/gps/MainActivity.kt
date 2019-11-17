@@ -1,8 +1,10 @@
 package com.pam.gps
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
@@ -13,6 +15,11 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+  private val mLocationPermissions = arrayOf(
+    android.Manifest.permission.ACCESS_FINE_LOCATION,
+    android.Manifest.permission.ACCESS_COARSE_LOCATION)
+
+  private val CODE_LOCATION_PERMISSIONS = 1234
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -38,6 +45,8 @@ class MainActivity : AppCompatActivity() {
 
     if(FirebaseAuth.getInstance().currentUser == null)
         navController.navigate(R.id.action_navigation_home_to_navigation_login)
+
+    requestPermissions()
   }
 
 
@@ -60,6 +69,30 @@ class MainActivity : AppCompatActivity() {
           .withEndAction { visibility = View.VISIBLE }
           .duration = 250
       }
+    }
+  }
+
+  private fun requestPermissions() {
+    if (ActivityCompat
+        .checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+      ActivityCompat.requestPermissions(this, mLocationPermissions, CODE_LOCATION_PERMISSIONS)
+    } else {
+      // Show rationale and request permission.
+    }
+  }
+
+  override fun onRequestPermissionsResult(requestCode: Int,
+                                          permissions: Array<String>, grantResults: IntArray) {
+    when (requestCode) {
+      CODE_LOCATION_PERMISSIONS -> {
+        if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+
+        } else {
+          requestPermissions()
+        }
+        return
+      }
+      else -> {}
     }
   }
 
