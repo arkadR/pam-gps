@@ -5,10 +5,12 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     tools:context=".ui.login.LoginFragment">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/login_edit"
+        android:id="@+id/login_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/login_hint"
@@ -32,7 +34,7 @@
         app:passwordToggleEnabled="true"
         android:hint="@string/password_hint"
         app:layout_constraintBottom_toTopOf="@+id/login_button"
-        app:layout_constraintTop_toBottomOf="@+id/login_edit">
+        app:layout_constraintTop_toBottomOf="@+id/login_layout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/password_text"
