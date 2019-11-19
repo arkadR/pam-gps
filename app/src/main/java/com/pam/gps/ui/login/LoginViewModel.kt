@@ -1,11 +1,14 @@
 package com.pam.gps.ui.login
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.pam.gps.utils.SingleLiveEvent
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import kotlinx.coroutines.tasks.await
-import timber.log.Timber
 
 class LoginViewModel : ViewModel() {
 

@@ -1,17 +1,17 @@
 package com.pam.gps.extensions
 
+import com.google.firebase.firestore.DocumentReference
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.Query
-import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-fun Query.asFlow(): Flow<QuerySnapshot?> {
+fun DocumentReference.asFlow(): Flow<DocumentSnapshot?> {
   return callbackFlow {
-    val onSnapShotListener = EventListener<QuerySnapshot> { snapshot, exception ->
+    val onSnapShotListener = EventListener<DocumentSnapshot> { snapshot, exception ->
       if (exception != null) cancel(CancellationException("FireStore Error", exception))
       offer(snapshot)
     }
