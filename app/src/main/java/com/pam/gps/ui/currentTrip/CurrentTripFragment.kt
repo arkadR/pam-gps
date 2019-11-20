@@ -51,7 +51,7 @@ class CurrentTripFragment : Fragment() {
   }
 
   private fun stopService1() {
-    val serviceIntent = Intent(requireContext(), TrackerService::class.java)
+//    val serviceIntent = Intent(requireContext(), TrackerService::class.java)
 //    stopS
   }
 

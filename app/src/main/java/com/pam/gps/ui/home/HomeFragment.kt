@@ -16,7 +16,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 class HomeFragment : Fragment() {
 
   @ExperimentalCoroutinesApi
-  private val toursViewModel by viewModels<TripsViewModel>()
+  private val tripsViewModel by viewModels<TripsViewModel>()
 
   private val viewAdapter: TripListAdapter = TripListAdapter()
 
@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
       layoutManager = LinearLayoutManager(this.context)
       adapter = viewAdapter
     }
-    toursViewModel.trips.observe(viewLifecycleOwner, Observer { tours -> viewAdapter.setData(tours) })
+//    tripsViewModel.trips.observe(viewLifecycleOwner, Observer { trips -> viewAdapter.setData(trips) })
     return root
   }
 
