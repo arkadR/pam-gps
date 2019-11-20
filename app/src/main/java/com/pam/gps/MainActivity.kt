@@ -1,6 +1,9 @@
 package com.pam.gps
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     android.Manifest.permission.ACCESS_FINE_LOCATION,
     android.Manifest.permission.ACCESS_COARSE_LOCATION)
 
-  private val CODE_LOCATION_PERMISSIONS = 1234
+  private val cLocationPermissionsCode = 4321
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -46,7 +49,8 @@ class MainActivity : AppCompatActivity() {
     if(FirebaseAuth.getInstance().currentUser == null)
         navController.navigate(R.id.action_navigation_home_to_navigation_login)
 
-    requestPermissions()
+    createNotificationChannel()
+    requestLocationPermissions()
   }
 
 
@@ -71,29 +75,41 @@ class MainActivity : AppCompatActivity() {
       }
     }
   }
+  private fun createNotificationChannel() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      val serviceChannel = NotificationChannel(
+        getString(R.string.notification_channel_id),
+        "Tracker Service Channel",
+        NotificationManager.IMPORTANCE_LOW
+      )
 
-  private fun requestPermissions() {
-    if (ActivityCompat
-        .checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-      ActivityCompat.requestPermissions(this, mLocationPermissions, CODE_LOCATION_PERMISSIONS)
-    } else {
-      // Show rationale and request permission.
+      getSystemService(NotificationManager::class.java)!!
+        .createNotificationChannel(serviceChannel)
     }
   }
 
-  override fun onRequestPermissionsResult(requestCode: Int,
-                                          permissions: Array<String>, grantResults: IntArray) {
-    when (requestCode) {
-      CODE_LOCATION_PERMISSIONS -> {
-        if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+  private fun requestLocationPermissions() {
+    if (!isPermissionGranted(android.Manifest.permission.ACCESS_FINE_LOCATION))
+      ActivityCompat.requestPermissions(this, mLocationPermissions, cLocationPermissionsCode)
 
-        } else {
-          requestPermissions()
-        }
+  }
+
+  override fun onRequestPermissionsResult(requestCode: Int,
+                                          permissions: Array<String>,
+                                          grantResults: IntArray) {
+    when (requestCode) {
+      cLocationPermissionsCode -> {
+        if ((grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED))
+          //TODO[AR]: Fix this shit, show a screen with info
+          requestLocationPermissions()
         return
       }
       else -> {}
     }
   }
 
+  private fun isPermissionGranted(permission: String): Boolean {
+    return ActivityCompat
+      .checkSelfPermission(this, permission) == PackageManager.PERMISSION_GRANTED
+  }
 }

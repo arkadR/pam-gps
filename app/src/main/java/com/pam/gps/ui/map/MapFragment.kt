@@ -21,11 +21,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
 
 @InternalCoroutinesApi
-class MapFragment : Fragment(), OnMapReadyCallback {
-
-  companion object {
-    fun newInstance() = MapFragment()
-  }
+class MapFragment : Fragment() {
 
   private val mapViewModel by viewModels<MapViewModel>()
 
@@ -36,19 +32,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     savedInstanceState: Bundle?
   ): View? {
     return inflater.inflate(R.layout.fragment_map, container, false).apply {
-      this.mapView.onCreate(savedInstanceState)
-      this.mapView.getMapAsync(this@MapFragment)
+      mapView.onCreate(savedInstanceState)
+      mapView.getMapAsync { googleMap ->
+        googleMap.isMyLocationEnabled = true
+        setUpClusterManager(googleMap)
+        mapView.onResume()
+      }
     }
-  }
-
-  override fun onActivityCreated(savedInstanceState: Bundle?) {
-    super.onActivityCreated(savedInstanceState)
-  }
-
-  override fun onMapReady(googleMap: GoogleMap) {
-    googleMap.isMyLocationEnabled = true
-    setUpClusterManager(googleMap)
-    mapView.onResume()
   }
 
   private fun setUpClusterManager(googleMap: GoogleMap) {
@@ -56,9 +46,9 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     googleMap.setOnCameraIdleListener(mClusterManager)
     googleMap.setOnMarkerClickListener(mClusterManager)
     mClusterManager.setAnimation(true)
-    mapViewModel.mapMarkers.observe(this, Observer {
-        marker -> mClusterManager.addItem(marker)
-        mClusterManager.cluster()
+    mapViewModel.mapMarkers.observe( viewLifecycleOwner, Observer { marker ->
+      mClusterManager.addItem(marker)
+      mClusterManager.cluster()
     })
   }
 }

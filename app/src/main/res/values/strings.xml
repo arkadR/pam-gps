@@ -23,4 +23,7 @@
     <string name="login_button">Sign in</string>
     <string name="forgot_password_button">FORGOT PASSWORD</string>
     <string name="sign_out_button">Sign Out</string>
+    <string name="notification_channel_name">Tracker Notification</string>
+    <string name="notification_channel_description">TODO: Some description</string>
+    <string name="notification_channel_id">CHANNEL_ID</string>
 </resources>
