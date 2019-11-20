@@ -1,5 +1,7 @@
 package com.pam.gps.model
 
-data class Trip(
-  val title: String = "") {
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentReference
+
+data class Trip(val title: String, val date: Timestamp, val details: DocumentReference) {
 }

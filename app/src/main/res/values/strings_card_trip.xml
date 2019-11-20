@@ -4,5 +4,5 @@
     <string name="trip_card_distance_placeholder">Distance</string>
     <string name="trip_card_edit_button_placeholder">Edit</string>
     <string name="trip_card_share_button_placeholder">Share</string>
-    <string name="trip_card_image_description">Photo identifier of the displayed trip</string>
+    <string name="trip_card_image_description">Photo identifier of the displayed tripDetails</string>
 </resources>
