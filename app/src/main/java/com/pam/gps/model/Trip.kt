@@ -6,7 +6,9 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class Trip(
+  val id: String = "",
   val title: String = "",
   val date: Timestamp? = null,
-  val details: String = ""
+  val details: String = "",
+  val finished: Boolean = false
 ) : Parcelable

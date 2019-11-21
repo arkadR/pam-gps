@@ -9,8 +9,8 @@ class TripViewModel : ViewModel() {
   private val tripsRepository = TripsRepository()
   val selectedTrip: MutableLiveData<Trip?> = MutableLiveData()
   val tripDetails: LiveData<TripDetails?> = selectedTrip.switchMap { trip ->
-    trip?.details!!.let { path ->
-      tripsRepository.getTripDetails(path).asLiveData()
-    }
+    trip?.let {
+      tripsRepository.getTripDetailsForTrip(it).asLiveData()
+    } ?: MutableLiveData()
   }
 }
