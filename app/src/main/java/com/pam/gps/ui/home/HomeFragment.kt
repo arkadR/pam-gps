@@ -9,14 +9,13 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pam.gps.R
-import com.pam.gps.ui.trips.TripsViewModel
 import kotlinx.android.synthetic.main.fragment_home.view.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
 class HomeFragment : Fragment() {
 
   @ExperimentalCoroutinesApi
-  private val tripsViewModel by viewModels<TripsViewModel>()
+  private val viewModel by viewModels<HomeViewModel>()
 
   private val viewAdapter: TripListAdapter = TripListAdapter()
 
@@ -33,7 +32,7 @@ class HomeFragment : Fragment() {
       layoutManager = LinearLayoutManager(this.context)
       adapter = viewAdapter
     }
-//    tripsViewModel.trips.observe(viewLifecycleOwner, Observer { trips -> viewAdapter.setData(trips) })
+    viewModel.trips.observe(viewLifecycleOwner, Observer { trips -> viewAdapter.setData(trips) })
     return root
   }
 

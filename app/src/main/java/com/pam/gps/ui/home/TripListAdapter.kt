@@ -5,12 +5,12 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.pam.gps.R
-import com.pam.gps.model.TripDetails
+import com.pam.gps.model.Trip
 import kotlinx.android.synthetic.main.card_trip.view.*
 
 class TripListAdapter : RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
 
-  private var data: List<TripDetails> = emptyList()
+  private var data: List<Trip> = emptyList()
 
   class TripViewHolder(val view: CardView) : RecyclerView.ViewHolder(view)
 
@@ -34,7 +34,7 @@ class TripListAdapter : RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
     return TripViewHolder(itemView)
   }
 
-  fun setData(newData: List<TripDetails>) {
+  fun setData(newData: List<Trip>) {
     data = newData
     notifyDataSetChanged()
   }

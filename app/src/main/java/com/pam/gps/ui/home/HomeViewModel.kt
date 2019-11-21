@@ -1,13 +1,21 @@
 package com.pam.gps.ui.home
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import com.google.firebase.auth.FirebaseAuth
+import com.pam.gps.model.Trip
+import com.pam.gps.repositories.TripsRepository
 
 class HomeViewModel : ViewModel() {
+  val trips: LiveData<List<Trip>>
+  var tripsRepository: TripsRepository = TripsRepository()
 
-  private val _text = MutableLiveData<String>().apply {
-    value = "This is home Fragment"
+  init {
+    trips = FirebaseAuth.getInstance().currentUser?.uid?.let {
+      tripsRepository
+        .getTrips(it)
+        .asLiveData()
+    } ?: throw RuntimeException("Firestore current user null")
   }
-  val text: LiveData<String> = _text
 }
