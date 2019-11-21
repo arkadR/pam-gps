@@ -18,6 +18,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.tasks.asDeferred
+import timber.log.Timber
 
 open class TripsRepository {
 
@@ -27,7 +28,7 @@ open class TripsRepository {
     const val tripsDetails = "trips_details"
     const val users = "users"
     const val trips = "trips"
-    const val coordinates = "coordinates"
+    const val tripCoordinates = "coordinates"
     const val tripFinished = "finished"
     const val owner = "owner"
     const val access = "access"
@@ -44,13 +45,17 @@ open class TripsRepository {
   }
 
   //returns null when document doesn't exist
-  fun getTripDetails(tripID: String): Flow<TripDetails?> {
+  fun getTripDetails(tripPath: String): Flow<TripDetails?> {
     return db
-      .collection(tripsDetails)
-      .document(tripID)
+      .document(tripPath)
       .asFlow()
-      .map { it?.toObject<TripDetails>() }
+      .map { Timber.d(it.toString()); it?.toObject<TripDetails>() }
   }
+
+  fun getTripDetails(tripDetailsReference: DocumentReference): Flow<TripDetails?> {
+    return tripDetailsReference.asFlow().mapNotNull { it?.toObject<TripDetails>() }
+  }
+
 
   fun getCurrentTripDetails(userId: String): Flow<List<TripDetails>> {
     return db
@@ -69,17 +74,18 @@ open class TripsRepository {
     ).asDeferred()
   }
 
-  fun addCoordinateAsync(
+  fun addCoordinatesAsync(
     documentReference: DocumentReference,
-    coordinate: Coordinate
+    coordinates: List<Coordinate>
   ): Deferred<Void> {
-    return documentReference.update(coordinates, FieldValue.arrayUnion(coordinate)).asDeferred()
+    return documentReference.update(tripCoordinates, FieldValue.arrayUnion(coordinates))
+      .asDeferred()
   }
 
-  fun addCoordinateAsync(tripDetailsId: String, coordinate: Coordinate): Deferred<Void> {
-    return addCoordinateAsync(
+  fun addCoordinatesAsync(tripDetailsId: String, coordinates: List<Coordinate>): Deferred<Void> {
+    return addCoordinatesAsync(
       db.collection(trips).document(tripDetailsId),
-      coordinate
+      coordinates
     )
   }
 
@@ -89,7 +95,7 @@ open class TripsRepository {
     tripDetailsReference: DocumentReference
   ): Deferred<Void> {
     val tripRef = db.collection(users).document(userId).collection(trips).document()
-    val trip = Trip(tripDetails.title, tripDetails.date, tripDetailsReference)
+    val trip = Trip(tripDetails.title, tripDetails.date, tripDetailsReference.path)
     return db.runBatch { batch ->
       batch.update(tripDetailsReference, tripFinished, true)
       batch.set(tripRef, trip)

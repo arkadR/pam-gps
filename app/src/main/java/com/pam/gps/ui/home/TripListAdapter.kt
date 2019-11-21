@@ -3,10 +3,12 @@ package com.pam.gps.ui.home
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.cardview.widget.CardView
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.pam.gps.R
 import com.pam.gps.model.Trip
 import kotlinx.android.synthetic.main.card_trip.view.*
+import java.text.SimpleDateFormat
 
 class TripListAdapter : RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
 
@@ -18,8 +20,16 @@ class TripListAdapter : RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
 
   override fun onBindViewHolder(holder: TripViewHolder, position: Int) {
     holder.view.apply {
+      setOnClickListener {
+        findNavController()
+          .navigate(
+            HomeFragmentDirections.actionNavigationHomeToTripFragment(data[position])
+          )
+      }
       txtTripTitle.text = data[position].title
-//      txtTripDate.text = data[position].date?.toString() ?: ""
+      txtTripDate.text =
+              //TODO[ME] Cleaner
+        SimpleDateFormat("dd.MM.yyyy").format(data[position].date?.toDate() ?: "")
     }
   }
 
