@@ -1,4 +1,4 @@
-package com.pam.gps.ui.login
+package com.pam.gps.ui.sign_in
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.tasks.await
 
-class LoginViewModel : ViewModel() {
+class SignInViewModel : ViewModel() {
 
   val authStatus: SingleLiveEvent<Unit> = SingleLiveEvent()
 

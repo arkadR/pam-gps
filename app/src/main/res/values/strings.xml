@@ -1,10 +1,5 @@
 <resources>
     <string name="app_name">GPS</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
-    <string name="hello_home_second">Hello HomeSecondFragment. Arg: %1$s</string>
-    <string name="hello_dashboard_second">Hello HomeSecondFragment. Arg: %1$s</string>
-    <string name="hello_notifications_second">Hello HomeSecondFragment. Arg: %1$s</string>
 
     <string name="title_home">Home</string>
     <string name="title_trip">Trip</string>
@@ -14,15 +9,16 @@
     <string name="home_second">Home Second</string>
 
 
-
-    <string name="login_hint">email</string>
-    <string name="email_error">Type in valid email address</string>
+    <string name="email_hint">email</string>
+    <string name="email_error">Please enter valid email address</string>
     <string name="password_hint">password</string>
-    <string name="password_error_match">Provided email and password don\'t match </string>
-    <string name="password_error_empty">Password must not be empty </string>
-    <string name="login_button">Sign in</string>
-    <string name="forgot_password_button">FORGOT PASSWORD</string>
+    <string name="sign_in_button">Sign in</string>
+    <string name="forgot_password_button">Forgot password</string>
     <string name="sign_out_button">Sign Out</string>
+    <string name="password_error_match">Provided email and password don\'t match </string>
+    <string name="password_error_empty">Password must not be empty</string>
+    <string name="unknown_auth_error">Unknown error occurred. Please try again later.</string>
+
     <string name="notification_channel_name">Tracker Notification</string>
     <string name="notification_channel_description">TODO: Some description</string>
     <string name="notification_channel_id">CHANNEL_ID</string>

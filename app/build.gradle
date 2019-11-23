@@ -4,9 +4,13 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+apply plugin: 'kotlin-kapt'
+
 apply plugin: 'androidx.navigation.safeargs'
 
 apply plugin: 'com.google.gms.google-services'
+
+
 
 android {
     compileSdkVersion 29
@@ -36,6 +40,9 @@ android {
     }
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
         kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"]
+    }
+    dataBinding {
+        enabled = true
     }
 }
 
@@ -81,6 +88,8 @@ dependencies {
     implementation "com.google.maps.android:android-maps-utils:0.6.2"
 
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+
+    kapt "com.android.databinding:compiler:3.1.4"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

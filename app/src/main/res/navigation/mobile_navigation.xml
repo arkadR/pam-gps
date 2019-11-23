@@ -31,9 +31,9 @@
         tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/navigation_login"
-        android:name="com.pam.gps.ui.login.LoginFragment"
+        android:name="com.pam.gps.ui.sign_in.SignInFragment"
         android:label="@string/title_sign_in"
-        tools:layout="@layout/fragment_login">
+        tools:layout="@layout/fragment_sign_in">
         <action
             android:id="@+id/action_navigation_login_to_navigation_home"
             app:destination="@id/navigation_home"
