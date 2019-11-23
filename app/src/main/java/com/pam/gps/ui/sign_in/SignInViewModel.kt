@@ -1,5 +1,7 @@
 package com.pam.gps.ui.sign_in
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
@@ -13,14 +15,24 @@ import kotlinx.coroutines.tasks.await
 class SignInViewModel : ViewModel() {
 
   val authStatus: SingleLiveEvent<Unit> = SingleLiveEvent()
+  private val _loading = MutableLiveData<Boolean>(false)
+  val loading: LiveData<Boolean> = _loading
 
   fun authenticate(username: String, password: String, handler: CoroutineExceptionHandler) {
-    (viewModelScope + handler + Dispatchers.Main).launch {
+    _loading.value = true
+    (viewModelScope + handlerDecorator(handler) + Dispatchers.Main).launch {
       FirebaseAuth
         .getInstance()
         .signInWithEmailAndPassword(username, password)
         .await()
-        authStatus.call()
+      authStatus.call()
+    }
+  }
+
+  private fun handlerDecorator(handler: CoroutineExceptionHandler): CoroutineExceptionHandler {
+    return CoroutineExceptionHandler { context, throwable ->
+      _loading.value = false
+      handler.handleException(context, throwable)
     }
   }
 }

@@ -42,6 +42,13 @@ class SignInFragment : Fragment() {
       viewLifecycleOwner, Observer {
         findNavController().navigate(R.id.action_navigation_login_to_navigation_home)
       })
+    viewModel.loading.observe(
+      viewLifecycleOwner, Observer { loading ->
+        progress_bar.visibility = if (loading) View.VISIBLE else View.INVISIBLE
+        sign_in_button.isEnabled = !loading
+        forgot_password_button.isEnabled = !loading
+      }
+    )
 
     email_text.withValidate(email_layout, emailErrorText, validateEmail)
     email_text.addTextChangedListener { email_layout.error = null }
@@ -49,11 +56,12 @@ class SignInFragment : Fragment() {
     password_text.withValidate(password_layout, passwordErrorText, validatePassword)
     password_text.addTextChangedListener { password_layout.error = null }
 
-    login_button.setOnClickListenerRequirements(
+    sign_in_button.setOnClickListenerRequirements(
       Pair(email_text, validateEmail),
       Pair(password_text, validatePassword),
       listener = View.OnClickListener {
         hideKeyboard(requireContext(), view)
+        sign_in_layout.requestFocus()
         viewModel.authenticate(
           email_text.text.toString(),
           password_text.text.toString(),
