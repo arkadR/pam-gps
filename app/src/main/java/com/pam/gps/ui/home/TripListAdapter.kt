@@ -1,47 +1,49 @@
 package com.pam.gps.ui.home
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import androidx.cardview.widget.CardView
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
+import com.pam.gps.BR
 import com.pam.gps.R
 import com.pam.gps.model.Trip
-import kotlinx.android.synthetic.main.card_trip.view.*
-import java.text.SimpleDateFormat
 
 class TripListAdapter : RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
 
   private var data: List<Trip> = emptyList()
 
-  class TripViewHolder(val view: CardView) : RecyclerView.ViewHolder(view)
+  class TripViewHolder(private val binding: ViewDataBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+    fun bind(trip: Trip) {
+      binding.setVariable(BR.trip, trip)
+      binding.setVariable(BR.holder, this)
+    }
+
+    fun navigateToTripDetails(view: View, trip: Trip) {
+      view.findNavController()
+        .navigate(
+          HomeFragmentDirections.actionNavigationHomeToTripFragment(trip)
+        )
+    }
+  }
 
   override fun getItemCount(): Int = data.size
 
   override fun onBindViewHolder(holder: TripViewHolder, position: Int) {
-    holder.view.apply {
-      setOnClickListener {
-        findNavController()
-          .navigate(
-            HomeFragmentDirections.actionNavigationHomeToTripFragment(data[position])
-          )
-      }
-      txtTripTitle.text = data[position].title
-      txtTripDate.text =
-              //TODO[ME] Cleaner
-        SimpleDateFormat("dd.MM.yyyy").format(data[position].date?.toDate() ?: "")
-    }
+    holder.bind(data[position])
   }
 
-  override fun onCreateViewHolder(
-    parent: ViewGroup,
-    viewType: Int
-  ): TripViewHolder {
-    val itemView = LayoutInflater
-      .from(parent.context)
-      .inflate(R.layout.card_trip, parent, false) as CardView
-
-    return TripViewHolder(itemView)
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TripViewHolder {
+    val binding = DataBindingUtil.inflate<ViewDataBinding>(
+      LayoutInflater.from(parent.context),
+      R.layout.card_trip,
+      parent,
+      false
+    )
+    return TripViewHolder(binding)
   }
 
   fun setData(newData: List<Trip>) {
