@@ -9,8 +9,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.PolylineOptions
 import com.pam.gps.R
+import com.pam.gps.extensions.addPath
+import com.pam.gps.extensions.centerOnPath
 import timber.log.Timber
 
 
@@ -33,10 +34,9 @@ class TripFragment : Fragment() {
 
     viewModel.tripDetails.observe(viewLifecycleOwner, Observer { tripDetails ->
       Timber.d("trip details = $tripDetails")
-      mapFragment.getMapAsync { maps ->
-        maps.addPolyline(PolylineOptions().apply {
-          if (tripDetails != null) add(*tripDetails.coordinates.map { it.asLatLng() }.toTypedArray())
-        })
+      mapFragment.getMapAsync { googleMap ->
+        googleMap.addPath(tripDetails!!.coordinates)
+        googleMap.centerOnPath(tripDetails.coordinates)
       }
     })
   }

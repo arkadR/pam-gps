@@ -46,8 +46,10 @@ class MapFragment : Fragment() {
     googleMap.setOnCameraIdleListener(mClusterManager)
     googleMap.setOnMarkerClickListener(mClusterManager)
     mClusterManager.setAnimation(true)
-    mapViewModel.mapMarkers.observe(viewLifecycleOwner, Observer { marker ->
-      mClusterManager.addItem(marker)
+    mapViewModel.mapMarkers.observe(viewLifecycleOwner, Observer { markerList ->
+      for (mapMarker in markerList) {
+        mClusterManager.addItem(mapMarker)
+      }
       mClusterManager.cluster()
     })
   }

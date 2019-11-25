@@ -13,8 +13,10 @@ import com.pam.gps.R
 import com.pam.gps.TrackerService
 import kotlinx.android.synthetic.main.fragment_current_trip.*
 import androidx.core.content.ContextCompat.startForegroundService
+import kotlinx.coroutines.InternalCoroutinesApi
 
 
+@InternalCoroutinesApi
 class CurrentTripFragment : Fragment() {
 
   companion object {
