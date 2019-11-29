@@ -10,13 +10,8 @@ data class TripDetails(
   val date: Timestamp = Timestamp.now(),
   val coordinates: List<Coordinate> = emptyList(),
   val access: List<User> = emptyList(),
-  val pictures: List<String> = emptyList()
-)
-  val access: List<User> = emptyList()
-) {
-
+  val pictures: List<String> = emptyList(),
   val googleMapPath: PolylineOptions = PolylineOptions().apply {
     addCoordinates(coordinates)
   }
-
-}
+)

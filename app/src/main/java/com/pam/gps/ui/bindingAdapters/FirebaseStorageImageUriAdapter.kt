@@ -4,9 +4,14 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import com.google.firebase.storage.FirebaseStorage
 import com.pam.gps.glideModules.GlideApp
+import timber.log.Timber
 
 @BindingAdapter("storageUri")
-fun ImageView.bindStorageUri(storageUri: String) {
+fun ImageView.bindStorageUri(storageUri: String?) {
+  if (storageUri.isNullOrBlank()) {
+    Timber.e("storage uri not present, uri = $storageUri")
+    return
+  }
   val ref = FirebaseStorage.getInstance().getReference(storageUri)
   GlideApp
     .with(context)

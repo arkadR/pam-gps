@@ -48,7 +48,7 @@ class TripFragment : Fragment() {
       Timber.d("trip details = $tripDetails")
       mapFragment.getMapAsync { googleMap ->
         googleMap.addPath(tripDetails!!.coordinates)
-        googleMap.centerOnPath(tripDetails.coordinates)
+        if (tripDetails.coordinates.isNotEmpty()) googleMap.centerOnPath(tripDetails.coordinates)
       }
     })
   }
