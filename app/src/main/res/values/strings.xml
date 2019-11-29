@@ -23,4 +23,5 @@
     <string name="notification_channel_description">TODO: Some description</string>
     <string name="notification_channel_id">CHANNEL_ID</string>
     <string name="signing_in_message">Signing in</string>
+    <string name="pictures_label">Pictures</string>
 </resources>

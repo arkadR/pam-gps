@@ -7,5 +7,6 @@ data class TripDetails(
   val title: String = "",
   val date: Timestamp = Timestamp.now(),
   val coordinates: List<Coordinate> = emptyList(),
-  val access: List<User> = emptyList()
+  val access: List<User> = emptyList(),
+  val pictures: List<String> = emptyList()
 )
