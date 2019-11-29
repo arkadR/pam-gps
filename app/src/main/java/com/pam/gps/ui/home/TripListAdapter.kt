@@ -3,13 +3,10 @@ package com.pam.gps.ui.home
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.google.firebase.storage.FirebaseStorage
 import com.pam.gps.BR
 import com.pam.gps.R
 import com.pam.gps.model.Trip
@@ -23,11 +20,6 @@ class TripListAdapter : RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
     fun bind(trip: Trip) {
       binding.setVariable(BR.trip, trip)
       binding.setVariable(BR.holder, this)
-      val imageView = binding.root.findViewById<ImageView>(R.id.imgTripPreview)
-      Glide
-        .with(imageView.context)
-        .load(FirebaseStorage.getInstance().getReference(trip.picture))
-        .into(imageView)
     }
 
     fun navigateToTripDetails(view: View, trip: Trip) {
