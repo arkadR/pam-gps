@@ -91,9 +91,9 @@ open class TripsRepository {
     return Pair(tripCommand.toTrip(tripRef.id), tripDetailsCommand.toTripDetails(tripDetailsRef.id))
   }
 
-  suspend fun addCoordinates(tripDetails: TripDetails, coordinates: List<Coordinate>) {
+  suspend fun addCoordinates(tripDetails: TripDetails, coordinates: Array<Coordinate>) {
     db.collection(tripsDetails).document(tripDetails.id)
-      .update(tripCoordinates, FieldValue.arrayUnion(coordinates))
+      .update(tripCoordinates, FieldValue.arrayUnion(*coordinates))
       .await()
   }
 }
