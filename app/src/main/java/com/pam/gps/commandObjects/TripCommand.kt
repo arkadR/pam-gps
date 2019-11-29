@@ -7,9 +7,10 @@ data class TripCommand(
   val title: String = "",
   val date: Timestamp? = null,
   val details: String = "",
-  val finished: Boolean = false
+  val finished: Boolean = false,
+  val picture: String = ""
 ) {
   fun toTrip(id: String): Trip {
-    return Trip(id, title, date, details, finished)
+    return Trip(id, title, date, details, finished, picture)
   }
 }

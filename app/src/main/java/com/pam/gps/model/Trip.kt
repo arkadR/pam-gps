@@ -10,5 +10,6 @@ data class Trip(
   val title: String = "",
   val date: Timestamp? = null,
   val details: String = "",
-  val finished: Boolean = false
+  val finished: Boolean = false,
+  val picture: String = ""
 ) : Parcelable
