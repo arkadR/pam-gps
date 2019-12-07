@@ -18,11 +18,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-  private val mLocationPermissions = arrayOf(
+  private val mRequiredPermissions = arrayOf(
     android.Manifest.permission.ACCESS_FINE_LOCATION,
-    android.Manifest.permission.ACCESS_COARSE_LOCATION)
+    android.Manifest.permission.READ_EXTERNAL_STORAGE,
+    android.Manifest.permission.ACCESS_MEDIA_LOCATION)
 
-  private val cLocationPermissionsCode = 4321
+  private val cRequestPermissionsCode = 4321
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(R.id.action_navigation_home_to_navigation_login)
 
     createNotificationChannel()
-    requestLocationPermissions()
+    requestPermissions()
   }
 
 
@@ -88,20 +89,18 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-  private fun requestLocationPermissions() {
-    if (!isPermissionGranted(android.Manifest.permission.ACCESS_FINE_LOCATION))
-      ActivityCompat.requestPermissions(this, mLocationPermissions, cLocationPermissionsCode)
-
+  private fun requestPermissions() {
+    ActivityCompat.requestPermissions(this, mRequiredPermissions, cRequestPermissionsCode)
   }
 
   override fun onRequestPermissionsResult(requestCode: Int,
                                           permissions: Array<String>,
                                           grantResults: IntArray) {
     when (requestCode) {
-      cLocationPermissionsCode -> {
+      cRequestPermissionsCode -> {
         if ((grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED))
           //TODO[AR]: Fix this shit, show a screen with info
-          requestLocationPermissions()
+          requestPermissions()
         return
       }
       else -> {}

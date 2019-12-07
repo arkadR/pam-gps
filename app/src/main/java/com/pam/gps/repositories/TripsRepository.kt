@@ -1,5 +1,6 @@
 package com.pam.gps.repositories
 
+import android.net.Uri
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
@@ -7,6 +8,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.pam.gps.commandObjects.TripCommand
 import com.pam.gps.commandObjects.TripDetailsCommand
 import com.pam.gps.extensions.asFlow
@@ -34,6 +36,7 @@ open class TripsRepository {
     const val users = "users"
     const val trips = "trips"
     const val tripCoordinates = "coordinates"
+    const val tripPictures = "pictures"
     const val tripFinished = "finished"
     const val owner = "owner"
     const val access = "access"
@@ -63,6 +66,17 @@ open class TripsRepository {
       .map { Timber.d(it.toString()); it?.toObject<TripDetailsCommand>()?.toTripDetails(it.id) }
   }
 
+  fun getCurrentTrip(): Flow<List<Trip>> {
+    return db
+      .collection(users)
+      .document(userId)
+      .collection(trips)
+      .whereEqualTo(tripFinished, false)
+      .asFlow()
+      .mapNotNull { it?.toObjects<Trip>() }
+
+  }
+
   fun getCurrentTripDetails(): Flow<List<TripDetails>> {
     return db
       .collection(tripsDetails)
@@ -78,7 +92,7 @@ open class TripsRepository {
     val tripRef = db.collection(users).document(userId).collection(trips).document()
     val tripDetailsRef = db.collection(tripsDetails).document()
 
-    val tripCommand = TripCommand(details = tripsDetails, date = ts)
+    val tripCommand = TripCommand(details = tripDetailsRef.id, date = ts)
     val tripDetailsCommand = TripDetailsCommand(
       date = ts,
       access = listOf(User(userId, "owner"))
@@ -94,6 +108,13 @@ open class TripsRepository {
   suspend fun addCoordinates(tripDetails: TripDetails, coordinates: Array<Coordinate>) {
     db.collection(tripsDetails).document(tripDetails.id)
       .update(tripCoordinates, FieldValue.arrayUnion(*coordinates))
+      .await()
+  }
+
+  suspend fun addPhotoToTripDetails(tripDetails: TripDetails, photoPaths: Array<String>) {
+    db.collection(tripsDetails)
+      .document(tripDetails.id)
+      .update(tripPictures, FieldValue.arrayUnion(*photoPaths))
       .await()
   }
 }
