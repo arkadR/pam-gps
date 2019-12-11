@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="tripDetails"
             type="com.pam.gps.model.TripDetails" />
@@ -13,8 +12,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.trip.TripFragment">
-
+        tools:context=".ui.trip.TripFragment"
+        android:background="@color/colorWhite">
 
         <TextView
             android:id="@+id/txtTripDistance"
@@ -116,20 +115,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintGuide_percent="0.5" />
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/details_map"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            app:layout_constraintBottom_toTopOf="@+id/pictures_label"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/icoTripPace"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:layout_constraintVertical_weight="0.6"
-            tools:context="com.pam.gps.MainActivity" />
-
         <TextView
             android:id="@+id/pictures_label"
             android:layout_width="0dp"
@@ -137,19 +122,18 @@
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:text="@string/pictures_label"
-            app:layout_constraintBottom_toTopOf="@+id/pictures_recycler"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/details_map" />
+            app:layout_constraintTop_toBottomOf="@+id/txtTripPace" />
+        <!--            app:layout_constraintBottom_toTopOf="@+id/pictures_recycler"-->
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/pictures_recycler"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pictures_label"
-            app:layout_constraintVertical_weight="0.4" />
+        <!--        <androidx.recyclerview.widget.RecyclerView-->
+        <!--            android:id="@+id/pictures_recycler"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintStart_toStartOf="parent"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/pictures_label" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

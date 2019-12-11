@@ -11,8 +11,8 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_navigation_home_to_tripFragment"
-            app:destination="@id/navigation_trip_details" />
+            android:id="@+id/action_navigation_home_to_tripFragmentMain"
+            app:destination="@id/navigation_trip_main" />
     </fragment>
     <fragment
         android:id="@+id/navigation_trip"
@@ -46,10 +46,10 @@
         app:popUpTo="@id/navigation_home"
         app:popUpToInclusive="true" />
     <fragment
-        android:id="@+id/navigation_trip_details"
-        android:name="com.pam.gps.ui.trip.TripFragment"
-        android:label="fragment_trip"
-        tools:layout="@layout/fragment_trip">
+        android:id="@+id/navigation_trip_main"
+        android:name="com.pam.gps.ui.trip.TripMainFragment"
+        android:label="fragment_trip_main"
+        tools:layout="@layout/fragment_trip_main">
         <argument
             android:name="trip"
             app:argType="com.pam.gps.model.Trip" />
