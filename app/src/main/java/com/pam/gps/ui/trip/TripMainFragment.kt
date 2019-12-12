@@ -5,16 +5,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.pam.gps.R
-import kotlinx.android.synthetic.main.fragment_trip_main.*
+import com.pam.gps.extensions.addPath
+import com.pam.gps.extensions.centerOnPath
 import timber.log.Timber
 
 
 class TripMainFragment : Fragment() {
+  private val args: TripMainFragmentArgs by navArgs()
+  private val viewModel by activityViewModels<TripViewModel>()
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    viewModel.selectedTrip.value = args.trip
   }
 
   override fun onCreateView(
@@ -29,17 +35,13 @@ class TripMainFragment : Fragment() {
     val mapFragment = childFragmentManager
       .findFragmentById(R.id.details_map) as SupportMapFragment
 
-    val beh = BottomSheetBehavior.from(bottom_sheet)
-    beh.state = BottomSheetBehavior.STATE_COLLAPSED
-    Timber.d("opacity = ${beh.getScrimOpacity(coordinator, bottom_sheet)}")
-
-/*    viewModel.tripDetails.observe(viewLifecycleOwner, Observer { tripDetails ->
+    viewModel.tripDetails.observe(viewLifecycleOwner, Observer { tripDetails ->
       Timber.d("trip details = $tripDetails")
       mapFragment.getMapAsync { googleMap ->
         googleMap.addPath(tripDetails!!.coordinates)
         if (tripDetails.coordinates.isNotEmpty()) googleMap.centerOnPath(tripDetails.coordinates)
       }
-    })*/
+    })
   }
 
 }

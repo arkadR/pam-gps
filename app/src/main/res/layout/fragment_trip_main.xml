@@ -16,7 +16,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/bottom_sheet"
-        android:name="com.pam.gps.ui.trip.TripFragment"
+        android:name="com.pam.gps.ui.trip.TripDetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
