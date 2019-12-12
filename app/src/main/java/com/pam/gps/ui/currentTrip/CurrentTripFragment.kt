@@ -15,7 +15,6 @@ import kotlinx.android.synthetic.main.fragment_current_trip.*
 import androidx.core.content.ContextCompat.startForegroundService
 import kotlinx.coroutines.InternalCoroutinesApi
 
-
 @InternalCoroutinesApi
 class CurrentTripFragment : Fragment() {
 
@@ -36,10 +35,15 @@ class CurrentTripFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     sign_out_button.setOnClickListener {
       FirebaseAuth.getInstance().signOut()
-      findNavController().navigate(com.pam.gps.R.id.action_navigation_trip_to_navigation_login)
+      findNavController().navigate(R.id.action_navigation_trip_to_navigation_login)
     }
-    track_button.setOnClickListener {
-      startService()
+    if (TrackerService.isRunning)
+      fab.setImageResource(R.drawable.ic_stop_tracker)
+    fab.setOnClickListener {
+      when {
+        TrackerService.isRunning -> stopService()
+        else -> startService()
+      }
     }
   }
 
@@ -48,13 +52,16 @@ class CurrentTripFragment : Fragment() {
   }
 
   private fun startService() {
-    val serviceIntent = Intent(requireContext(), TrackerService::class.java)
-    startForegroundService(requireContext(), serviceIntent)
+    val startIntent = Intent(requireContext(), TrackerService::class.java)
+    startIntent.action = TrackerService.START_SERVICE_CODE
+    startForegroundService(requireContext(), startIntent)
+    fab.setImageResource(R.drawable.ic_stop_tracker)
   }
 
-  private fun stopService1() {
-//    val serviceIntent = Intent(requireContext(), TrackerService::class.java)
-//    stopS
+  private fun stopService() {
+    val stopIntent = Intent(requireContext(), TrackerService::class.java)
+    stopIntent.action = TrackerService.STOP_SERVICE_CODE
+    startForegroundService(requireContext(), stopIntent);
+    fab.setImageResource(R.drawable.ic_start_tracker)
   }
-
 }
