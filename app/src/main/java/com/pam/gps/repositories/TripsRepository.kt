@@ -49,16 +49,14 @@ open class TripsRepository {
   }
 
   fun getCurrentTrip(): Flow<CurrentTrip?> {
-    return db
-      .collection(collection_current_trips)
+    return dbCurrentTripsCollection
       .document(userId)
       .asFlow()
       .map { it?.toObject<CurrentTrip>() }
   }
 
   suspend fun getCurrentTripSnapshot(): CurrentTrip? {
-    return db
-      .collection(collection_current_trips)
+    return dbCurrentTripsCollection
       .document(userId)
       .get()
       .await()
@@ -68,7 +66,7 @@ open class TripsRepository {
   suspend fun createTrip(): CurrentTrip {
     val ts = Timestamp.now()
 
-    val currentTripRef = db.collection(collection_current_trips).document(userId)
+    val currentTripRef = dbCurrentTripsCollection.document(userId)
     val tripDetailsRef = dbTripsDetailsCollection.document()
 
     val trip = Trip(date = ts)
@@ -94,16 +92,26 @@ open class TripsRepository {
       throw RuntimeException("trip = $trip, tripDetails = $tripDetails while finishing trip")
     val tripDetailsReference = dbTripsDetailsCollection.document(tripDetails.id)
 
-    val tripReference = dbCurrentUserTripsCollection.document()
-    val tripWithIds = trip.copy(
-      id = tripReference.id,
-      details = tripDetails.id
-    )
-    db.runBatch { batch ->
-      batch.set(tripReference, tripWithIds)
-      batch.set(tripDetailsReference, tripDetails)
-      batch.delete(db.collection(collection_current_trips).document(userId))
+    if (tripDetails.coordinates.size < 2) {
+      db.runBatch { batch ->
+        batch.delete(tripDetailsReference)
+        batch.delete(dbCurrentTripsCollection.document(userId))
+      }
     }
+    else {
+      val tripReference = dbCurrentUserTripsCollection.document()
+      val tripWithIds = trip.copy(
+        id = tripReference.id,
+        details = tripDetails.id
+      )
+      db.runBatch { batch ->
+        batch.set(tripReference, tripWithIds)
+        batch.set(tripDetailsReference, tripDetails)
+        batch.delete(dbCurrentTripsCollection.document(userId))
+      }
+    }
+
+
   }
 
   suspend fun addCoordinates(coordinates: Array<Coordinate>) {
@@ -118,7 +126,7 @@ open class TripsRepository {
   }
 
   private suspend fun <T> addArrayDataToCurrentTripDetails(field: String, data: Array<T>) {
-    db.collection(collection_current_trips)
+    dbCurrentTripsCollection
       .document(userId)
       .update("tripDetails.$field", FieldValue.arrayUnion(*data))
       .await()
@@ -136,4 +144,8 @@ open class TripsRepository {
   private val dbTripsDetailsCollection: CollectionReference
     get() = this.db
       .collection(tripsDetails)
+
+  private val dbCurrentTripsCollection: CollectionReference
+    get() = this.db
+      .collection(collection_current_trips)
 }
