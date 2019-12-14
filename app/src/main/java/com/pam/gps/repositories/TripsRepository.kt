@@ -69,15 +69,21 @@ open class TripsRepository {
     val ts = Timestamp.now()
 
     val currentTripRef = db.collection(collection_current_trips).document(userId)
+    val tripDetailsRef = dbTripsDetailsCollection.document()
 
     val trip = Trip(date = ts)
     val tripDetails = TripDetails(
+      id = tripDetailsRef.id,
       date = ts,
       access = listOf(User(userId, "owner"))
     )
     val currentTrip = CurrentTrip(userId, trip, tripDetails)
 
-    currentTripRef.set(currentTrip).await()
+    db.runBatch { batch ->
+      batch.set(currentTripRef, currentTrip)
+      batch.set(tripDetailsRef, tripDetails)
+    }.await()
+    Timber.d("creating trip $currentTrip")
     return currentTrip
   }
 
@@ -86,18 +92,16 @@ open class TripsRepository {
       ?: throw RuntimeException("Current trip returned null")
     if (trip == null || tripDetails == null)
       throw RuntimeException("trip = $trip, tripDetails = $tripDetails while finishing trip")
-    val tripDetailsReference = dbTripsDetailsCollection.document()
+    val tripDetailsReference = dbTripsDetailsCollection.document(tripDetails.id)
+
     val tripReference = dbCurrentUserTripsCollection.document()
     val tripWithIds = trip.copy(
       id = tripReference.id,
-      details = tripDetailsReference.id
-    )
-    val tripDetailsWithIds = tripDetails.copy(
-      id = tripDetailsReference.id
+      details = tripDetails.id
     )
     db.runBatch { batch ->
       batch.set(tripReference, tripWithIds)
-      batch.set(tripDetailsReference, tripDetailsWithIds)
+      batch.set(tripDetailsReference, tripDetails)
       batch.delete(db.collection(collection_current_trips).document(userId))
     }
   }

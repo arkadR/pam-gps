@@ -5,7 +5,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import com.pam.gps.model.CurrentTrip
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 import java.io.File
@@ -18,9 +17,10 @@ class PhotosRepository {
   )
   private val tripsRepository = TripsRepository()
 
-  suspend fun addPhotoToTrip(currentTrip: CurrentTrip, photoUri: Uri) = runBlocking {
+  suspend fun addPhotoToTrip(currentTrip: CurrentTrip, photoUri: Uri) {
     if (currentTrip.tripDetails == null) throw RuntimeException("Trip details null for $currentTrip")
     val path = "${userId}/${currentTrip.tripDetails.id}/${photoUri.lastPathSegment}"
+    Timber.d("upload path is $path")
     try {
       storageRef.child(path).putFile(Uri.fromFile(File(photoUri.toString()))).await()
     } catch (e: Exception) {
