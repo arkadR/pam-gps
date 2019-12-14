@@ -8,6 +8,12 @@ import kotlinx.coroutines.runBlocking
 
 class MapViewModel : ViewModel() {
 
+  private val allTripDetails = TripsRepository()
+    .getAllTripsDetails()
+
+  init {
+
+  }
   //TODO[ME] Commented because of FireStore refactor, need to fix
 //  val mapMarkers = flow {
 //    for (x in 0..10) {
@@ -19,11 +25,18 @@ class MapViewModel : ViewModel() {
 //  }.asLiveData()
 
   val mapMarkers =
-    TripsRepository()
-      .getAllTripsDetails()
+    allTripDetails
       .transform { allDetails ->
         emit (allDetails.flatMap { details -> details.coordinates }
           .map { coord -> MapMarker(coord) })
       }
       .asLiveData()
+
+  val tripPaths =
+    allTripDetails
+      .transform { allDetails ->
+        emit(allDetails.map { details -> details.coordinates })
+      }
+      .asLiveData()
+
 }

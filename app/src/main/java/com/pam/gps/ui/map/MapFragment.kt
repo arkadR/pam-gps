@@ -10,6 +10,7 @@ import androidx.lifecycle.Observer
 import com.google.android.gms.maps.GoogleMap
 import com.google.maps.android.clustering.ClusterManager
 import com.pam.gps.R
+import com.pam.gps.extensions.addPath
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.coroutines.InternalCoroutinesApi
 
@@ -52,6 +53,11 @@ class MapFragment : Fragment() {
         mClusterManager.addItem(mapMarker)
       }
       mClusterManager.cluster()
+    })
+    mapViewModel.tripPaths.observe(viewLifecycleOwner, Observer { pathList ->
+      for (path in pathList) {
+        googleMap.addPath(path)
+      }
     })
   }
 }
