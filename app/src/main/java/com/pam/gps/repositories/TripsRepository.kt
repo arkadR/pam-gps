@@ -81,6 +81,27 @@ open class TripsRepository {
     return currentTrip
   }
 
+  suspend fun finishTrip() {
+    val (_, trip, tripDetails) = getCurrentTripSnapshot()
+      ?: throw RuntimeException("Current trip returned null")
+    if (trip == null || tripDetails == null)
+      throw RuntimeException("trip = $trip, tripDetails = $tripDetails while finishing trip")
+    val tripDetailsReference = dbTripsDetailsCollection.document()
+    val tripReference = dbCurrentUserTripsCollection.document()
+    val tripWithIds = trip.copy(
+      id = tripReference.id,
+      details = tripDetailsReference.id
+    )
+    val tripDetailsWithIds = tripDetails.copy(
+      id = tripDetailsReference.id
+    )
+    db.runBatch { batch ->
+      batch.set(tripReference, tripWithIds)
+      batch.set(tripDetailsReference, tripDetailsWithIds)
+      batch.delete(db.collection(collection_current_trips).document(userId))
+    }
+  }
+
   suspend fun addCoordinates(coordinates: Array<Coordinate>) {
     addArrayDataToCurrentTripDetails("coordinates", coordinates)
   }

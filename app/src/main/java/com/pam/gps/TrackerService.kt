@@ -93,7 +93,7 @@ class TrackerService : Service() {
         mFusedLocationClient.removeLocationUpdates(mLocationCallback)
         stopForeground(true)
         mServiceScope.launch {
-          mTripsRepository.finishTrip(mCurrentTrip)
+          mTripsRepository.finishTrip()
           stopSelf()
         }
       }
