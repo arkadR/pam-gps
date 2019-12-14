@@ -8,8 +8,7 @@ import kotlinx.android.parcel.Parcelize
 data class Trip(
   val id: String = "",
   val title: String = "",
-  val date: Timestamp? = null,
+  val date: Timestamp = Timestamp.now(),
   val details: String = "",
-  val finished: Boolean = false,
   val picture: String = ""
 ) : Parcelable

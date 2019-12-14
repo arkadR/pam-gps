@@ -4,10 +4,10 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import com.pam.gps.model.Trip
-import com.pam.gps.model.TripDetails
-import kotlinx.coroutines.launch
+import com.pam.gps.model.CurrentTrip
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import java.io.File
 
 class PhotosRepository {
@@ -18,20 +18,14 @@ class PhotosRepository {
   )
   private val tripsRepository = TripsRepository()
 
-  fun addPhotoToTrip(trip: Trip, tripDetails: TripDetails, photoUri: Uri)  = runBlocking {
-    val path = "${userId}/${trip.id}/${photoUri.lastPathSegment}"
-    val uploadTask = storageRef.child(path).putFile(Uri.fromFile(File(photoUri.toString()))).apply {
-      addOnCompleteListener { task ->
-        if (task.isSuccessful) {
-          val downloadUri = task.result
-          launch {
-            tripsRepository.addPhotoToTripDetails(tripDetails, arrayOf(path))
-          }
-        }
-        else {
-          //TODO[AR}: Then what?
-        }
-      }
-    }
+  suspend fun addPhotoToTrip(currentTrip: CurrentTrip, photoUri: Uri) = runBlocking {
+    if (currentTrip.tripDetails == null) throw RuntimeException("Trip details null for $currentTrip")
+    val path = "${userId}/${currentTrip.tripDetails.id}/${photoUri.lastPathSegment}"
+    try {
+      storageRef.child(path).putFile(Uri.fromFile(File(photoUri.toString()))).await()
+    } catch (e: Exception) {
+      Timber.e(e)
+    } //TODO[ME] Recover
+    tripsRepository.addPhotoToCurrentTrip(arrayOf(path))
   }
 }

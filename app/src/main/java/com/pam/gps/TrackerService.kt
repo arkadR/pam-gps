@@ -9,14 +9,11 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.*
 import com.pam.gps.model.Coordinate
-import com.pam.gps.model.Trip
-import com.pam.gps.model.TripDetails
+import com.pam.gps.model.CurrentTrip
 import com.pam.gps.repositories.LocalPhotosRepository
 import com.pam.gps.repositories.PhotosRepository
 import com.pam.gps.repositories.TripsRepository
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.take
 import timber.log.Timber
 
 @InternalCoroutinesApi
@@ -25,8 +22,8 @@ class TrackerService : Service() {
   companion object {
     const val STOP_SERVICE_CODE = "STOP_SERVICE"
     const val START_SERVICE_CODE = "START_SERVICE"
-    private var isCreated = false;
-    val isRunning get() = TrackerService.isCreated;
+    private var isCreated = false
+    val isRunning get() = isCreated
   }
 
   private lateinit var mFusedLocationClient: FusedLocationProviderClient
@@ -39,8 +36,7 @@ class TrackerService : Service() {
   }
   private lateinit var mLocationCallback: LocationCallback
 
-  private lateinit var mCurrentTrip: Trip
-  private lateinit var mCurrentTripDetails: TripDetails
+  private lateinit var mCurrentTrip: CurrentTrip
 
   private val mTripsRepository = TripsRepository()
   private val mPhotosRepository = PhotosRepository()
@@ -63,7 +59,7 @@ class TrackerService : Service() {
 
   override fun onCreate() {
     super.onCreate()
-    TrackerService.isCreated = true;
+    isCreated = true
     mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     mLocationCallback = object : LocationCallback() {
       override fun onLocationResult(locationResult: LocationResult?) {
@@ -79,26 +75,9 @@ class TrackerService : Service() {
       }
     }
     mServiceScope.launch {
-      mTripsRepository.getCurrentTrip().take(1).collect { list ->
-        when {
-          list.isEmpty() -> {
-            Timber.d("No active trip received from FireBase, creating new one")
-            val (x, y) = mTripsRepository.createTrip()
-            mCurrentTrip = x
-            mCurrentTripDetails = y
-          }
-          list.size == 1 -> {
-            Timber.d("Found an active trip in db!")
-            mCurrentTrip = list.first()
-            mTripsRepository.getTripDetailsForTrip(mCurrentTrip).take(1).collect { details ->
-              if (details == null)
-                throw Exception("No trip details found for an existing trip!")
-              mCurrentTripDetails = details
-            }
-          }
-          else -> throw Exception("Too many active trips")
-        }
-      }
+      val currentTrip = mTripsRepository.getCurrentTripSnapshot()
+      mCurrentTrip = currentTrip ?: mTripsRepository.createTrip()
+      Timber.d("trip = $mCurrentTrip")
     }
   }
 
@@ -123,10 +102,10 @@ class TrackerService : Service() {
 
   override fun onDestroy() {
     super.onDestroy()
-    TrackerService.isCreated = false;
+    isCreated = false
   }
 
-  private fun createNotification() : Notification {
+  private fun createNotification(): Notification {
     val pendingIntent = Intent(this, MainActivity::class.java).let {
       PendingIntent.getActivity(this, 0, it, 0)
     }
@@ -154,11 +133,11 @@ class TrackerService : Service() {
       Timber.d("No coordinates to post.")
       return
     }
-    if (::mCurrentTripDetails.isInitialized)
+    if (::mCurrentTrip.isInitialized)
       mServiceScope.launch {
         withContext(Dispatchers.Default) {
           Timber.d("Sending ${mCoordinateQueue.size} coordinates to the DB.")
-//          mTripsRepository.addCoordinates(mCurrentTripDetails, mCoordinateQueue.toTypedArray())
+          mTripsRepository.addCoordinates(mCoordinateQueue.toTypedArray())
         }
         Timber.d("Cleaning coordinate queue.")
         mCoordinateQueue.clear()
@@ -172,13 +151,16 @@ class TrackerService : Service() {
 
   private fun tryPostPhotos() {
     if (mPhotoUriQueue.isEmpty()) {
-      Timber.d("No coordinates to post.")
+      Timber.d("No photos to post.")
       return
     }
     if (::mCurrentTrip.isInitialized) {
       Timber.d("Posting ${mPhotoUriQueue.size} photos to trip ${mCurrentTrip.id}.")
       mPhotoUriQueue.forEach { uri ->
-        mPhotosRepository.addPhotoToTrip(mCurrentTrip, mCurrentTripDetails, uri)
+        Timber.d("photo uri = $uri")
+        mServiceScope.launch {
+          mPhotosRepository.addPhotoToTrip(mCurrentTrip, uri)
+        }
       }
       Timber.d("Cleaning photo queue")
       mPhotoUriQueue.clear()

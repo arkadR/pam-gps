@@ -1,26 +1,17 @@
 package com.pam.gps.repositories
 
-import android.net.Uri
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
-import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
-import com.pam.gps.commandObjects.TripCommand
-import com.pam.gps.commandObjects.TripDetailsCommand
 import com.pam.gps.extensions.asFlow
-import com.pam.gps.model.Coordinate
-import com.pam.gps.model.Trip
-import com.pam.gps.model.TripDetails
-import com.pam.gps.model.User
+import com.pam.gps.model.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
@@ -33,28 +24,22 @@ open class TripsRepository {
 
   companion object {
     const val tripsDetails = "trips_details"
-    const val users = "users"
-    const val trips = "trips"
-    const val tripCoordinates = "coordinates"
+    const val collection_users = "users"
+    const val collection_trips = "trips"
+    const val collection_current_trips = "current_trips"
     const val tripPictures = "pictures"
-    const val tripFinished = "finished"
-    const val owner = "owner"
-    const val access = "access"
   }
 
   fun getTrips(): Flow<List<Trip>> {
     return db
-      .collection(users)
+      .collection(collection_users)
       .document(userId)
-      .collection(trips)
+      .collection(collection_trips)
       .asFlow()
       .map { query ->
-        query?.documents?.mapNotNull { document ->
-          document.toObject<TripCommand>()?.toTrip(document.id)
-        }
+        query?.toObjects(Trip::class.java)
           ?: throw RuntimeException("Query returned null") //TODO[ME] Don't know what's exactly going on here and why would it fail
       }
-      .map { list -> list.filter { trip -> trip.finished } }
       .flowOn(Dispatchers.IO)
   }
 
@@ -63,51 +48,45 @@ open class TripsRepository {
       .collection(tripsDetails)
       .document(trip.details)
       .asFlow()
-      .map { Timber.d(it.toString()); it?.toObject<TripDetailsCommand>()?.toTripDetails(it.id) }
+      .map { Timber.d(it.toString()); it?.toObject<TripDetails>() }
   }
 
-  fun getCurrentTrip(): Flow<List<Trip>> {
+  fun getCurrentTrip(): Flow<CurrentTrip?> {
     return db
-      .collection(users)
+      .collection(collection_current_trips)
       .document(userId)
-      .collection(trips)
-      .whereEqualTo(tripFinished, false)
       .asFlow()
-      .mapNotNull { it?.toObjects<Trip>() }
-
+      .map { it?.toObject<CurrentTrip>() }
   }
 
-  fun getCurrentTripDetails(): Flow<List<TripDetails>> {
+  suspend fun getCurrentTripSnapshot(): CurrentTrip? {
     return db
-      .collection(tripsDetails)
-      .whereEqualTo(tripFinished, false)
-      .whereArrayContains(access, User(userId, owner))
-      .asFlow()
-      .mapNotNull { it?.toObjects<TripDetails>() }
+      .collection(collection_current_trips)
+      .document(userId)
+      .get()
+      .await()
+      .toObject<CurrentTrip>()
   }
 
-  suspend fun createTrip(): Pair<Trip, TripDetails> {
+  suspend fun createTrip(): CurrentTrip {
     val ts = Timestamp.now()
 
-    val tripRef = db.collection(users).document(userId).collection(trips).document()
-    val tripDetailsRef = db.collection(tripsDetails).document()
+    val currentTripRef = db.collection(collection_current_trips).document(userId)
 
-    val tripCommand = TripCommand(details = tripDetailsRef.id, date = ts)
-    val tripDetailsCommand = TripDetailsCommand(
+    val trip = Trip(date = ts)
+    val tripDetails = TripDetails(
       date = ts,
       access = listOf(User(userId, "owner"))
     )
+    val currentTrip = CurrentTrip(userId, trip, tripDetails)
 
-    db.runBatch { batch ->
-      batch.set(tripDetailsRef, tripDetailsCommand)
-      batch.set(tripRef, tripCommand)
-    }.await()
-    return Pair(tripCommand.toTrip(tripRef.id), tripDetailsCommand.toTripDetails(tripDetailsRef.id))
+    currentTripRef.set(currentTrip).await()
+    return currentTrip
   }
 
-  suspend fun addCoordinates(tripDetails: TripDetails, coordinates: Array<Coordinate>) {
-    db.collection(tripsDetails).document(tripDetails.id)
-      .update(tripCoordinates, FieldValue.arrayUnion(*coordinates))
+  suspend fun addCoordinates(coordinates: Array<Coordinate>) {
+    db.collection(collection_current_trips).document(userId)
+      .update("tripDetails.coordinates", FieldValue.arrayUnion(*coordinates))
       .await()
   }
 
@@ -115,6 +94,13 @@ open class TripsRepository {
     db.collection(tripsDetails)
       .document(tripDetails.id)
       .update(tripPictures, FieldValue.arrayUnion(*photoPaths))
+      .await()
+  }
+
+  suspend fun addPhotoToCurrentTrip(photoPaths: Array<String>) {
+    db.collection(collection_current_trips)
+      .document(userId)
+      .update("tripDetails.pictures", FieldValue.arrayUnion(*photoPaths))
       .await()
   }
 }
