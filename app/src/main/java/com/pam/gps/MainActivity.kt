@@ -47,12 +47,13 @@ class MainActivity : AppCompatActivity() {
         else -> showBottomNavigation()
       }
     }
-    if (intent.extras?.get("SENDER") == "Notification") {
-      navController.navigate(R.id.navigation_trip)
-    }
 
     if(FirebaseAuth.getInstance().currentUser == null)
         navController.navigate(R.id.action_navigation_home_to_navigation_login)
+
+    if (intent.extras?.get("SENDER") == "Notification") {
+      navController.navigate(R.id.navigation_trip)
+    }
 
     createNotificationChannel()
     requestPermissions()

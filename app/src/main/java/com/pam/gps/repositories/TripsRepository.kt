@@ -1,16 +1,12 @@
 package com.pam.gps.repositories
 
-import android.net.Uri
-import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import com.pam.gps.commandObjects.TripCommand
 import com.pam.gps.commandObjects.TripDetailsCommand
 import com.pam.gps.extensions.asFlow
@@ -45,10 +41,7 @@ open class TripsRepository {
   }
 
   fun getTrips(): Flow<List<Trip>> {
-    return db
-      .collection(users)
-      .document(userId)
-      .collection(trips)
+    return dbCurrentUserTripsCollection
       .asFlow()
       .map { query ->
         query?.documents?.mapNotNull { document ->
@@ -61,18 +54,14 @@ open class TripsRepository {
   }
 
   fun getTripDetailsForTrip(trip: Trip): Flow<TripDetails?> {
-    return db
-      .collection(tripsDetails)
+    return dbTripsDetailsCollection
       .document(trip.details)
       .asFlow()
       .map { Timber.d(it.toString()); it?.toObject<TripDetailsCommand>()?.toTripDetails(it.id) }
   }
 
   fun getCurrentTrip(): Flow<List<Trip>> {
-    return db
-      .collection(users)
-      .document(userId)
-      .collection(trips)
+    return dbCurrentUserTripsCollection
       .whereEqualTo(tripFinished, false)
       .asFlow()
       .mapNotNull { it?.toObjects<Trip>() }
@@ -80,8 +69,7 @@ open class TripsRepository {
   }
 
   fun getCurrentTripDetails(): Flow<List<TripDetails>> {
-    return db
-      .collection(tripsDetails)
+    return dbTripsDetailsCollection
       .whereEqualTo(tripFinished, false)
       .whereArrayContains(access, User(userId, owner))
       .asFlow()
@@ -89,8 +77,8 @@ open class TripsRepository {
   }
 
   suspend fun createTrip(): Pair<Trip, TripDetails> {
-    val tripRef = db.collection(users).document(userId).collection(trips).document()
-    val tripDetailsRef = db.collection(tripsDetails).document()
+    val tripRef = dbCurrentUserTripsCollection.document()
+    val tripDetailsRef = dbTripsDetailsCollection.document()
 
     val tripCommand = TripCommand(details = tripDetailsRef.id, id = tripRef.id)
     val tripDetailsCommand = TripDetailsCommand(
@@ -106,32 +94,30 @@ open class TripsRepository {
   }
 
   suspend fun finishTrip(trip: Trip) {
-    db.collection(users)
-      .document(userId)
-      .collection(trips)
+    dbCurrentUserTripsCollection
       .document(trip.id)
       .update(tripFinished, true)
       .await()
   }
 
-  suspend fun addCoordinates(tripDetails: TripDetails, coordinates: Array<Coordinate>) {
-    db.collection(tripsDetails).document(tripDetails.id)
-      .update(tripCoordinates, FieldValue.arrayUnion(*coordinates))
+  suspend fun addCoordinates(tripDetails: TripDetails, coordinates: Array<Coordinate>) =
+    addArrayDataToDetails(tripDetails, tripCoordinates, coordinates)
+
+  suspend fun addPhotoToTripDetails(tripDetails: TripDetails, photoPaths: Array<String>) =
+    addArrayDataToDetails(tripDetails, tripPictures, photoPaths)
+
+  private suspend fun <T> addArrayDataToDetails(tripDetails: TripDetails, field: String, data: Array<T>) {
+    dbTripsDetailsCollection.document(tripDetails.id)
+      .update(field, FieldValue.arrayUnion(*data))
       .await()
   }
 
-  suspend fun addPhotoToTripDetails(tripDetails: TripDetails, photoPaths: Array<String>) {
-    db.collection(tripsDetails)
-      .document(tripDetails.id)
-      .update(tripPictures, FieldValue.arrayUnion(*photoPaths))
-      .await()
-  }
-
-
-
-
-  private val dbCurrentUserTrips : CollectionReference
+  private val dbCurrentUserTripsCollection : CollectionReference
     get() = this.db.collection(users)
         .document(userId)
         .collection(trips)
+
+  private val dbTripsDetailsCollection : CollectionReference
+    get() = this.db
+      .collection(tripsDetails)
 }
