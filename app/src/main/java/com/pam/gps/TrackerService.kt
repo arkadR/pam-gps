@@ -78,32 +78,7 @@ class TrackerService : Service() {
         this@TrackerService.tryPostPhotos()
       }
     }
-    mServiceScope.launch {
-      mTripsRepository.getCurrentTrip().take(1).collect { list ->
-        when {
-          list.isEmpty() -> {
-            Timber.d("No active trip received from FireBase, creating new one")
-            val (x, y) = mTripsRepository.createTrip()
-            mCurrentTrip = x
-            mCurrentTripDetails = y
-            Timber.d("Trip Id:         ${mCurrentTrip.id}")
-            Timber.d("Trip details Id: ${mCurrentTripDetails.id}")
-          }
-          list.size == 1 -> {
-            Timber.d("Found an active trip in db!")
-            mCurrentTrip = list.first()
-            Timber.d("Trip Id:         ${mCurrentTrip.id}")
-            mTripsRepository.getTripDetailsForTrip(mCurrentTrip).take(1).collect { details ->
-              if (details == null)
-                throw Exception("No trip details found for an existing trip!")
-              mCurrentTripDetails = details
-              Timber.d("Trip details Id: ${mCurrentTripDetails.id}")
-            }
-          }
-          else -> throw Exception("Too many active trips")
-        }
-      }
-    }
+    mServiceScope.launch { loadTripAndDetails() }
   }
 
   override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -133,13 +108,19 @@ class TrackerService : Service() {
   }
 
   private fun createNotification() : Notification {
-    val pendingIntent = Intent(this, MainActivity::class.java).let {
-      PendingIntent.getActivity(this, 0, it, 0)
+    val activityIntent = Intent(this, MainActivity::class.java).apply {
+      putExtra("SENDER", "Notification")
     }
+    val pendingIntent = PendingIntent.getActivity(
+      this,
+      0,
+      activityIntent,
+      PendingIntent.FLAG_UPDATE_CURRENT)
+
     return NotificationCompat
       .Builder(this, getString(R.string.notification_channel_id))
-      .setContentTitle("Tracker Title")
-      .setContentText("Content Text")
+      .setContentTitle(getString(R.string.notification_title))
+      .setContentText(getString(R.string.notification_text))
       .setContentIntent(pendingIntent)
       .setPriority(NotificationCompat.PRIORITY_LOW)
       .setSmallIcon(R.drawable.ic_notification_icon)
@@ -189,6 +170,33 @@ class TrackerService : Service() {
       Timber.d("Cleaning photo queue")
       mPhotoUriQueue.clear()
       mLastPhotoUploadTime = currentEpochTime
+    }
+  }
+
+  private suspend fun loadTripAndDetails() {
+    mTripsRepository.getCurrentTrip().take(1).collect { list ->
+      when {
+        list.isEmpty() -> {
+          Timber.d("No active trip received from FireBase, creating new one")
+          val (x, y) = mTripsRepository.createTrip()
+          mCurrentTrip = x
+          mCurrentTripDetails = y
+          Timber.d("Trip Id:         ${mCurrentTrip.id}")
+          Timber.d("Trip details Id: ${mCurrentTripDetails.id}")
+        }
+        list.size == 1 -> {
+          Timber.d("Found an active trip in db!")
+          mCurrentTrip = list.first()
+          Timber.d("Trip Id:         ${mCurrentTrip.id}")
+          mTripsRepository.getTripDetailsForTrip(mCurrentTrip).take(1).collect { details ->
+            if (details == null)
+              throw Exception("No trip details found for an existing trip!")
+            mCurrentTripDetails = details
+            Timber.d("Trip details Id: ${mCurrentTripDetails.id}")
+          }
+        }
+        else -> throw Exception("Too many active trips")
+      }
     }
   }
 }
