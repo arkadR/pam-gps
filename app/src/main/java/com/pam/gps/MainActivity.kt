@@ -15,6 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
@@ -49,6 +50,10 @@ class MainActivity : AppCompatActivity() {
 
     if(FirebaseAuth.getInstance().currentUser == null)
         navController.navigate(R.id.action_navigation_home_to_navigation_login)
+
+    if (intent.extras?.get("SENDER") == "Notification") {
+      navController.navigate(R.id.navigation_trip)
+    }
 
     createNotificationChannel()
     requestPermissions()
