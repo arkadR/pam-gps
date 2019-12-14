@@ -1,6 +1,10 @@
 package com.pam.gps.ui.map
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import com.pam.gps.repositories.TripsRepository
+import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.runBlocking
 
 class MapViewModel : ViewModel() {
 
@@ -14,8 +18,12 @@ class MapViewModel : ViewModel() {
 //    }
 //  }.asLiveData()
 
-//  val mapMarkers = TripsRepository()
-//    .getCurrentTripDetails()
-//    .mapNotNull {it?.coordinates?.map { coordinate -> MapMarker(coordinate) } }
-//    .asLiveData()
+  val mapMarkers =
+    TripsRepository()
+      .getAllTripsDetails()
+      .transform { allDetails ->
+        emit (allDetails.flatMap { details -> details.coordinates }
+          .map { coord -> MapMarker(coord) })
+      }
+      .asLiveData()
 }
