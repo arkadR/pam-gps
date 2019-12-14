@@ -1,15 +1,10 @@
 package com.pam.gps.ui.map
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import com.google.android.gms.maps.model.LatLng
-import com.pam.gps.repositories.TripsRepository
-import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.*
 
 class MapViewModel : ViewModel() {
 
+  //TODO[ME] Commented because of FireStore refactor, need to fix
 //  val mapMarkers = flow {
 //    for (x in 0..10) {
 //      for (y in 0..10) {
@@ -19,11 +14,8 @@ class MapViewModel : ViewModel() {
 //    }
 //  }.asLiveData()
 
-  @InternalCoroutinesApi
-  val mapMarkers = TripsRepository()
-    .getCurrentTripDetails()
-    .mapNotNull { list -> if (list.isNotEmpty()) list.first().coordinates else emptyList() }
-    .mapNotNull { coordList -> coordList.map { coord -> MapMarker(coord) } }
-    .asLiveData()
-
+//  val mapMarkers = TripsRepository()
+//    .getCurrentTripDetails()
+//    .mapNotNull {it?.coordinates?.map { coordinate -> MapMarker(coordinate) } }
+//    .asLiveData()
 }

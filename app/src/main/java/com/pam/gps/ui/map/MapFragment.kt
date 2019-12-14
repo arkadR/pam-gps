@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.google.android.gms.maps.GoogleMap
 import com.google.maps.android.clustering.ClusterManager
 import com.pam.gps.R
@@ -46,11 +45,12 @@ class MapFragment : Fragment() {
     googleMap.setOnCameraIdleListener(mClusterManager)
     googleMap.setOnMarkerClickListener(mClusterManager)
     mClusterManager.setAnimation(true)
-    mapViewModel.mapMarkers.observe(viewLifecycleOwner, Observer { markerList ->
+    //TODO[ME] Commented because of FireStore refactor, need to fix
+/*    mapViewModel.mapMarkers.observe(viewLifecycleOwner, Observer { markerList ->
       for (mapMarker in markerList) {
         mClusterManager.addItem(mapMarker)
       }
       mClusterManager.cluster()
-    })
+    })*/
   }
 }
