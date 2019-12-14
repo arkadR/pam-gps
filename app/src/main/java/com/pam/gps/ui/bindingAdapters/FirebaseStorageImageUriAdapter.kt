@@ -12,6 +12,7 @@ fun ImageView.bindStorageUri(storageUri: String?) {
     Timber.e("storage uri not present, uri = $storageUri")
     return
   }
+  Timber.d("storage uri = $storageUri")
   val ref = FirebaseStorage.getInstance().getReference(storageUri)
   GlideApp
     .with(context)
