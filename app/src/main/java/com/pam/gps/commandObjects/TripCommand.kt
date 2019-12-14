@@ -4,8 +4,9 @@ import com.google.firebase.Timestamp
 import com.pam.gps.model.Trip
 
 data class TripCommand(
+  val id: String = "",
   val title: String = "",
-  val date: Timestamp? = null,
+  val date: Timestamp = Timestamp.now(),
   val details: String = "",
   val finished: Boolean = false,
   val picture: String = ""

@@ -86,14 +86,18 @@ class TrackerService : Service() {
             val (x, y) = mTripsRepository.createTrip()
             mCurrentTrip = x
             mCurrentTripDetails = y
+            Timber.d("Trip Id:         ${mCurrentTrip.id}")
+            Timber.d("Trip details Id: ${mCurrentTripDetails.id}")
           }
           list.size == 1 -> {
             Timber.d("Found an active trip in db!")
             mCurrentTrip = list.first()
+            Timber.d("Trip Id:         ${mCurrentTrip.id}")
             mTripsRepository.getTripDetailsForTrip(mCurrentTrip).take(1).collect { details ->
               if (details == null)
                 throw Exception("No trip details found for an existing trip!")
               mCurrentTripDetails = details
+              Timber.d("Trip details Id: ${mCurrentTripDetails.id}")
             }
           }
           else -> throw Exception("Too many active trips")
@@ -113,9 +117,11 @@ class TrackerService : Service() {
         mFusedLocationClient.flushLocations()
         mFusedLocationClient.removeLocationUpdates(mLocationCallback)
         stopForeground(true)
-        stopSelf()
+        mServiceScope.launch {
+          mTripsRepository.finishTrip(mCurrentTrip)
+          stopSelf()
+        }
       }
-      //calls onCreate and onStartCommand again when app is resurrected
     }
 
     return START_STICKY //calls onCreate and onStartCommand again when app is resurrected
@@ -158,7 +164,7 @@ class TrackerService : Service() {
       mServiceScope.launch {
         withContext(Dispatchers.Default) {
           Timber.d("Sending ${mCoordinateQueue.size} coordinates to the DB.")
-//          mTripsRepository.addCoordinates(mCurrentTripDetails, mCoordinateQueue.toTypedArray())
+          mTripsRepository.addCoordinates(mCurrentTripDetails, mCoordinateQueue.toTypedArray())
         }
         Timber.d("Cleaning coordinate queue.")
         mCoordinateQueue.clear()
@@ -172,7 +178,7 @@ class TrackerService : Service() {
 
   private fun tryPostPhotos() {
     if (mPhotoUriQueue.isEmpty()) {
-      Timber.d("No coordinates to post.")
+      Timber.d("No photos to post.")
       return
     }
     if (::mCurrentTrip.isInitialized) {

@@ -6,6 +6,7 @@ import com.pam.gps.model.TripDetails
 import com.pam.gps.model.User
 
 data class TripDetailsCommand(
+  val id: String = "",
   val title: String = "",
   val date: Timestamp = Timestamp.now(),
   val coordinates: List<Coordinate> = emptyList(),

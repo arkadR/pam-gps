@@ -3,6 +3,8 @@ package com.pam.gps.repositories
 import android.net.Uri
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -87,14 +89,12 @@ open class TripsRepository {
   }
 
   suspend fun createTrip(): Pair<Trip, TripDetails> {
-    val ts = Timestamp.now()
-
     val tripRef = db.collection(users).document(userId).collection(trips).document()
     val tripDetailsRef = db.collection(tripsDetails).document()
 
-    val tripCommand = TripCommand(details = tripDetailsRef.id, date = ts)
+    val tripCommand = TripCommand(details = tripDetailsRef.id, id = tripRef.id)
     val tripDetailsCommand = TripDetailsCommand(
-      date = ts,
+      id = tripDetailsRef.id,
       access = listOf(User(userId, "owner"))
     )
 
@@ -103,6 +103,15 @@ open class TripsRepository {
       batch.set(tripRef, tripCommand)
     }.await()
     return Pair(tripCommand.toTrip(tripRef.id), tripDetailsCommand.toTripDetails(tripDetailsRef.id))
+  }
+
+  suspend fun finishTrip(trip: Trip) {
+    db.collection(users)
+      .document(userId)
+      .collection(trips)
+      .document(trip.id)
+      .update(tripFinished, true)
+      .await()
   }
 
   suspend fun addCoordinates(tripDetails: TripDetails, coordinates: Array<Coordinate>) {
@@ -117,4 +126,12 @@ open class TripsRepository {
       .update(tripPictures, FieldValue.arrayUnion(*photoPaths))
       .await()
   }
+
+
+
+
+  private val dbCurrentUserTrips : CollectionReference
+    get() = this.db.collection(users)
+        .document(userId)
+        .collection(trips)
 }
