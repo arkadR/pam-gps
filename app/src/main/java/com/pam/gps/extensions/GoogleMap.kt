@@ -2,6 +2,7 @@ package com.pam.gps.extensions
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
 import com.pam.gps.model.Coordinate
@@ -21,5 +22,10 @@ fun GoogleMap.centerOnPath(coordinates: List<Coordinate>) {
     coordinates.forEach { coordinate -> this.include(coordinate.asLatLng()) }
   }.build()
   val cameraUpdate = CameraUpdateFactory.newLatLngBounds(latLngBounds, 100)
+  this.moveCamera(cameraUpdate)
+}
+
+fun GoogleMap.centerOnPoint(point: LatLng) {
+  val cameraUpdate = CameraUpdateFactory.newLatLng(point)
   this.moveCamera(cameraUpdate)
 }

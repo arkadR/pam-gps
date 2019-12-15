@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
         <variable
             name="tripDetails"
             type="com.pam.gps.model.TripDetails" />
@@ -13,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorWhite"
+        android:elevation="50dp"
         tools:context=".ui.trip.TripDetailsFragment">
 
         <TextView
@@ -22,7 +21,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:text="Distance"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -35,7 +33,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:text="Pace"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -61,7 +58,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:text="Duration"
             android:textSize="16sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintHorizontal_bias="0.0"
@@ -73,10 +69,10 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars" />
+            app:layout_constraintTop_toBottomOf="@+id/icoBottomSheetIndicator"
+            app:srcCompat="@drawable/ic_trip_region"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/icoTripDuration"
@@ -86,7 +82,8 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/icoTripRegion"
-            tools:src="@tools:sample/avatars" />
+            app:srcCompat="@drawable/ic_trip_duration"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/icoTripPace"
@@ -96,17 +93,18 @@
             android:layout_marginTop="@dimen/activity_vertical_margin"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/icoTripDistance"
-            tools:src="@tools:sample/avatars" />
+            app:srcCompat="@drawable/ic_trip_pace"
+            tools:ignore="ContentDescription" />
 
         <ImageView
             android:id="@+id/icoTripDistance"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/avatars" />
+            app:layout_constraintTop_toBottomOf="@+id/icoBottomSheetIndicator"
+            app:srcCompat="@drawable/ic_trip_distance"
+            tools:ignore="ContentDescription" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
@@ -116,25 +114,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintGuide_percent="0.5" />
 
-        <TextView
-            android:id="@+id/pictures_label"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:text="@string/pictures_label"
-            app:layout_constraintBottom_toTopOf="@+id/pictures_recycler"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/txtTripPace" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/pictures_recycler"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_marginTop="16dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pictures_label" />
+            app:layout_constraintTop_toBottomOf="@+id/txtTripPace" />
+
+        <ImageView
+            android:id="@+id/icoBottomSheetIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_bottom_sheet_indicator"
+            tools:ignore="ContentDescription" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

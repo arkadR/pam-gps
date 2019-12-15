@@ -9,6 +9,8 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.pam.gps.R
+import com.pam.gps.extensions.withDecimalPlaces
+import kotlinx.android.synthetic.main.fragment_trip_details.*
 import kotlinx.android.synthetic.main.fragment_trip_details.view.*
 import timber.log.Timber
 
@@ -25,7 +27,7 @@ class TripDetailsFragment : Fragment() {
     val view = inflater.inflate(R.layout.fragment_trip_details, container, false)
     view.pictures_recycler.apply {
       adapter = picturesAdapter
-      layoutManager = GridLayoutManager(context, 4)
+      layoutManager = GridLayoutManager(context, 3)
     }
     return view
   }
@@ -34,7 +36,12 @@ class TripDetailsFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     viewModel.tripDetails.observe(viewLifecycleOwner, Observer {
       Timber.d("tripdetails = $it")
-      it?.let { picturesAdapter.setData(it.pictures) }
+      it?.let {
+        picturesAdapter.setData(it.pictures)
+        txtTripDistance.text = it.distanceInKm.withDecimalPlaces(2) + " km"
+        txtTripDuration.text = (it.durationInSeconds).toString() + "sec"
+        txtTripPace.text = it.paceInMinutesPerKm.withDecimalPlaces(2) + "min/km"
+      }
     })
 
   }

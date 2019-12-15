@@ -3,6 +3,7 @@ package com.pam.gps.repositories
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
@@ -10,9 +11,7 @@ import com.google.firebase.ktx.Firebase
 import com.pam.gps.extensions.asFlow
 import com.pam.gps.model.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
@@ -49,17 +48,13 @@ open class TripsRepository {
   }
 
   fun getCurrentTrip(): Flow<CurrentTrip?> {
-    return db
-      .collection(collection_current_trips)
-      .document(userId)
+    return dbCurrentUserCurrentTripReference
       .asFlow()
       .map { it?.toObject<CurrentTrip>() }
   }
 
   suspend fun getCurrentTripSnapshot(): CurrentTrip? {
-    return db
-      .collection(collection_current_trips)
-      .document(userId)
+    return dbCurrentUserCurrentTripReference
       .get()
       .await()
       .toObject<CurrentTrip>()
@@ -68,7 +63,7 @@ open class TripsRepository {
   suspend fun createTrip(): CurrentTrip {
     val ts = Timestamp.now()
 
-    val currentTripRef = db.collection(collection_current_trips).document(userId)
+    val currentTripRef = dbCurrentUserCurrentTripReference
     val tripDetailsRef = dbTripsDetailsCollection.document()
 
     val trip = Trip(date = ts)
@@ -94,16 +89,31 @@ open class TripsRepository {
       throw RuntimeException("trip = $trip, tripDetails = $tripDetails while finishing trip")
     val tripDetailsReference = dbTripsDetailsCollection.document(tripDetails.id)
 
-    val tripReference = dbCurrentUserTripsCollection.document()
-    val tripWithIds = trip.copy(
-      id = tripReference.id,
-      details = tripDetails.id
-    )
-    db.runBatch { batch ->
-      batch.set(tripReference, tripWithIds)
-      batch.set(tripDetailsReference, tripDetails)
-      batch.delete(db.collection(collection_current_trips).document(userId))
+    if (tripDetails.coordinates.size < 2) {
+      db.runBatch { batch ->
+        batch.delete(tripDetailsReference)
+        batch.delete(dbCurrentUserCurrentTripReference)
+      }
     }
+    else {
+      val tripReference = dbCurrentUserTripsCollection.document()
+      val tripWithIds = trip.copy(
+        id = tripReference.id,
+        details = tripDetails.id
+      )
+      db.runBatch { batch ->
+        batch.set(tripReference, tripWithIds)
+        batch.set(tripDetailsReference, tripDetails)
+        batch.delete(dbCurrentUserCurrentTripReference)
+      }
+    }
+  }
+
+  fun getAllTripsDetails(): Flow<List<TripDetails>> {
+    return dbTripsDetailsCollection
+      .asFlow()
+      .map {query -> query?.toObjects(TripDetails::class.java)}
+      .filterNotNull()
   }
 
   suspend fun addCoordinates(coordinates: Array<Coordinate>) {
@@ -118,8 +128,7 @@ open class TripsRepository {
   }
 
   private suspend fun <T> addArrayDataToCurrentTripDetails(field: String, data: Array<T>) {
-    db.collection(collection_current_trips)
-      .document(userId)
+    dbCurrentUserCurrentTripReference
       .update("tripDetails.$field", FieldValue.arrayUnion(*data))
       .await()
   }
@@ -136,4 +145,9 @@ open class TripsRepository {
   private val dbTripsDetailsCollection: CollectionReference
     get() = this.db
       .collection(tripsDetails)
+
+  private val dbCurrentUserCurrentTripReference: DocumentReference
+    get() = this.db
+      .collection(collection_current_trips)
+      .document(userId)
 }
