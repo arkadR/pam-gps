@@ -1,15 +1,17 @@
 package com.pam.gps.ui.currentTrip
 
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.pam.gps.model.CurrentTrip
 import com.pam.gps.repositories.TripsRepository
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 
 class CurrentTripViewModel : ViewModel() {
   private val mTripsRepository = TripsRepository()
 
-  val currentTrip: LiveData<CurrentTrip?> = mTripsRepository.getCurrentTrip().asLiveData()
-  val selectedImageUri: MutableLiveData<String?> = MutableLiveData()
-  val images: LiveData<List<String>?> = currentTrip.map {
-    it?.tripDetails?.pictures
-  }
+  val currentTrip: Deferred<CurrentTrip?> =
+    viewModelScope.async {
+      return@async mTripsRepository.getCurrentTripSnapshot()
+    }
 }
