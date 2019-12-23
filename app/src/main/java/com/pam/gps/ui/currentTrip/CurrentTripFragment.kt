@@ -43,7 +43,7 @@ class CurrentTripFragment : Fragment() {
       when {
         TrackerService.isRunning -> {
           findNavController().navigate(R.id.action_navigation_trip_to_finishTripFragment)
-          //stopService()
+          stopService()
         }
         else -> startService()
       }

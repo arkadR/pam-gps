@@ -61,6 +61,11 @@
         android:id="@+id/finishTripFragment"
         android:name="com.pam.gps.ui.currentTrip.FinishTripFragment"
         android:label="@string/title_trip_finish"
-        tools:layout="@layout/finish_trip_fragment" />
+        tools:layout="@layout/finish_trip_fragment">
+        <action
+            android:id="@+id/action_finishTripFragment_to_navigation_home"
+            app:destination="@id/navigation_home"
+            app:popUpTo="@id/navigation_home" />
+    </fragment>
 
 </navigation>

@@ -92,10 +92,7 @@ class TrackerService : Service() {
         mFusedLocationClient.flushLocations()
         mFusedLocationClient.removeLocationUpdates(mLocationCallback)
         stopForeground(true)
-        mServiceScope.launch {
-          mTripsRepository.finishTrip()
-          stopSelf()
-        }
+        stopSelf()
       }
     }
 
@@ -107,7 +104,7 @@ class TrackerService : Service() {
     isCreated = false
   }
 
-  private fun createNotification() : Notification {
+  private fun createNotification(): Notification {
     val activityIntent = Intent(this, MainActivity::class.java).apply {
       putExtra("SENDER", "Notification")
     }
@@ -115,7 +112,8 @@ class TrackerService : Service() {
       this,
       0,
       activityIntent,
-      PendingIntent.FLAG_UPDATE_CURRENT)
+      PendingIntent.FLAG_UPDATE_CURRENT
+    )
 
     return NotificationCompat
       .Builder(this, getString(R.string.notification_channel_id))

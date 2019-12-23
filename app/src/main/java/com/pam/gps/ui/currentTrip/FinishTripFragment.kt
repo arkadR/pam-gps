@@ -1,21 +1,27 @@
 package com.pam.gps.ui.currentTrip
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pam.gps.R
+import com.pam.gps.utils.hideKeyboard
+import kotlinx.android.synthetic.main.finish_trip_fragment.*
 import kotlinx.android.synthetic.main.finish_trip_fragment.view.*
 
 class FinishTripFragment : Fragment() {
 
   private val viewModel by viewModels<CurrentTripViewModel>()
+  private lateinit var picturesAdapter: PictureSelectAdapter
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    setHasOptionsMenu(true)
+    super.onCreate(savedInstanceState)
+  }
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -27,7 +33,7 @@ class FinishTripFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     lifecycleScope.launchWhenResumed {
-      val picturesAdapter = PictureSelectAdapter(
+      picturesAdapter = PictureSelectAdapter(
         requireContext(),
         viewModel.currentTrip.await()?.tripDetails?.pictures ?: emptyList()
       )
@@ -53,5 +59,31 @@ class FinishTripFragment : Fragment() {
         })
       }
     }
+  }
+
+
+  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    inflater.inflate(R.menu.finish_trip_menu, menu)
+    super.onCreateOptionsMenu(menu, inflater)
+  }
+
+  override fun onOptionsItemSelected(item: MenuItem): Boolean {
+    return when (item.itemId) {
+      R.id.finish_trip_save_button -> {
+        hideKeyboard(requireContext(), requireView())
+        saveTrip()
+        findNavController().navigate(R.id.action_finishTripFragment_to_navigation_home)
+        true
+      }
+      else -> super.onOptionsItemSelected(item)
+    }
+  }
+
+  private fun saveTrip() {
+    //TODO[ME] validate title
+    viewModel.saveTrip(
+      title_text.text.toString(),
+      picturesAdapter.imageUris.getOrElse(picturesAdapter.selectedPosition) { "" }
+    )
   }
 }

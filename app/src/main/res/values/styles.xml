@@ -3,15 +3,36 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
-
-
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="colorOnPrimary">@android:color/white</item>
 
+        <item name="materialButtonStyle">
+            @style/Widget.MaterialComponents.Button
+        </item>
 
+        <item name="floatingActionButtonStyle">
+            @style/Widget.MaterialComponents.FloatingActionButton
+        </item>
+
+        <item name="shapeAppearanceMediumComponent">
+            @style/CustomMediumShape
+        </item>
+
+        <item name="shapeAppearanceLargeComponent">
+            @style/CustomLargeShape
+        </item>
+
+    </style>
+
+    <style name="CustomMediumShape" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerRadius">30dp</item>
+    </style>
+
+    <style name="CustomLargeShape" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerRadius">30dp</item>
     </style>
 
 </resources>

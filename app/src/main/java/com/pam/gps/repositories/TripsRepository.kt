@@ -11,7 +11,10 @@ import com.google.firebase.ktx.Firebase
 import com.pam.gps.extensions.asFlow
 import com.pam.gps.model.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
@@ -82,30 +85,34 @@ open class TripsRepository {
     return currentTrip
   }
 
-  suspend fun finishTrip() {
+  suspend fun finishTrip(title: String, thumbnailPath: String) {
     val (_, trip, tripDetails) = getCurrentTripSnapshot()
       ?: throw RuntimeException("Current trip returned null")
     if (trip == null || tripDetails == null)
       throw RuntimeException("trip = $trip, tripDetails = $tripDetails while finishing trip")
     val tripDetailsReference = dbTripsDetailsCollection.document(tripDetails.id)
 
-    if (tripDetails.coordinates.size < 2) {
+    //TODO[ME] testing purposes, although I believe that just deleting a trip is confusing to user (I just got super confused!)
+    //if (tripDetails.coordinates.size < 2) {
+    if (false) {
       db.runBatch { batch ->
         batch.delete(tripDetailsReference)
         batch.delete(dbCurrentUserCurrentTripReference)
-      }
+      }.await()
     }
     else {
       val tripReference = dbCurrentUserTripsCollection.document()
       val tripWithIds = trip.copy(
         id = tripReference.id,
-        details = tripDetails.id
+        details = tripDetails.id,
+        title = title,
+        picture = thumbnailPath
       )
       db.runBatch { batch ->
         batch.set(tripReference, tripWithIds)
-        batch.set(tripDetailsReference, tripDetails)
+        batch.set(tripDetailsReference, tripDetails.copy(title = title))
         batch.delete(dbCurrentUserCurrentTripReference)
-      }
+      }.await()
     }
   }
 

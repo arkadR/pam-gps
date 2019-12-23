@@ -38,7 +38,7 @@
         tools:listitem="@layout/recycler_view_item_1"
         tools:spanCount="5" />
 
-    <com.google.android.material.button.MaterialButton
+    <Button
         android:id="@+id/materialButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
