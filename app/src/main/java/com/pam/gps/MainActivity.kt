@@ -10,10 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -32,16 +29,18 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    val navView: BottomNavigationView = findViewById(R.id.nav_view)
+    setSupportActionBar(toolbar)
+    supportActionBar?.setDisplayShowTitleEnabled(false)
 
     val navController = findNavController(R.id.nav_host_fragment)
-    // Passing each menu ID as a set of Ids because each
-    // menu should be considered as top level destinations.
 
-    mAppBarConfiguration = AppBarConfiguration(navController.graph)
+    toolbar.setupWithNavController(
+      navController,
+      AppBarConfiguration(setOf(R.id.navigation_home, R.id.navigation_map, R.id.navigation_trip))
+    )
 
-    setupActionBarWithNavController(navController, mAppBarConfiguration)
-    navView.setupWithNavController(navController)
+    nav_view.setupWithNavController(navController)
+
     navController.addOnDestinationChangedListener { _, destination, _ ->
       when (destination.id) {
         R.id.navigation_login -> hideBottomNavigation()
@@ -59,12 +58,6 @@ class MainActivity : AppCompatActivity() {
     createNotificationChannel()
     requestPermissions()
   }
-
-  override fun onSupportNavigateUp(): Boolean {
-    return findNavController(R.id.nav_host_fragment).navigateUp(mAppBarConfiguration)
-            || super.onSupportNavigateUp()
-  }
-
 
   private fun hideBottomNavigation() {
     nav_view.run {
