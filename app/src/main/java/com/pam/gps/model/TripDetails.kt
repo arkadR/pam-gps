@@ -14,7 +14,10 @@ data class TripDetails(
   val distanceInKm: Double
   get() {
     if (coordinates.size < 2)
-      throw Exception("Trip details with less than 2 coords should not exist.")
+      return 0.0
+//      throw Exception("Trip details with less than 2 coords should not exist.")
+    //TODO[ME] And if trip was just created? It crashes if you try to watch it in ViewModel
+
     val locations = coordinates
       .sortedBy { coord -> coord.timestamp }
       .map { coord -> coord.asLocation() }
@@ -26,7 +29,9 @@ data class TripDetails(
   val durationInSeconds: Long
   get() {
     if (coordinates.size < 2)
-      throw Exception("Trip details with less than 2 coords should not exist.")
+      return 0
+//      throw Exception("Trip details with less than 2 coords should not exist.")
+//TODO[ME] Same thing
     return coordinates
       .map {coord -> coord.timestamp}
       .sortedBy { timestamp -> timestamp }
@@ -34,7 +39,7 @@ data class TripDetails(
   }
 
   val paceInMinutesPerKm: Double
-  get() = (durationInSeconds / 60) / distanceInKm
+    get() = if (distanceInKm == 0.0) 0.0 else (durationInSeconds / 60) / distanceInKm
 /*  val googleMapPath: PolylineOptions by lazy {
     PolylineOptions().apply {
       addCoordinates(coordinates)

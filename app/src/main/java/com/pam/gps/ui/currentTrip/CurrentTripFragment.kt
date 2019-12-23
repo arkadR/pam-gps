@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat.startForegroundService
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -12,7 +13,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.pam.gps.R
 import com.pam.gps.TrackerService
 import kotlinx.android.synthetic.main.fragment_current_trip.*
-import androidx.core.content.ContextCompat.startForegroundService
 import kotlinx.coroutines.InternalCoroutinesApi
 
 @InternalCoroutinesApi
@@ -41,7 +41,10 @@ class CurrentTripFragment : Fragment() {
       fab.setImageResource(R.drawable.ic_stop_tracker)
     fab.setOnClickListener {
       when {
-        TrackerService.isRunning -> stopService()
+        TrackerService.isRunning -> {
+          findNavController().navigate(R.id.action_navigation_trip_to_finishTripFragment)
+          //stopService()
+        }
         else -> startService()
       }
     }
@@ -61,7 +64,7 @@ class CurrentTripFragment : Fragment() {
   private fun stopService() {
     val stopIntent = Intent(requireContext(), TrackerService::class.java)
     stopIntent.action = TrackerService.STOP_SERVICE_CODE
-    startForegroundService(requireContext(), stopIntent);
+    startForegroundService(requireContext(), stopIntent)
     fab.setImageResource(R.drawable.ic_start_tracker)
   }
 }

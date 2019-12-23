@@ -5,6 +5,8 @@
     <string name="title_trip">Trip</string>
     <string name="title_map">Map</string>
     <string name="title_sign_in">Sign in</string>
+    <string name="title_trip_details">Trip Details</string>
+    <string name="title_trip_finish">Save Trip</string>
 
     <string name="home_second">Home Second</string>
 
@@ -29,4 +31,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="notification_title">Your trip is being tracked in the background</string>
     <string name="notification_text">Click here to stop tracking</string>
+    <string name="title_hint">Trip title</string>
+    <string name="button_save_trip">SAVE</string>
 </resources>

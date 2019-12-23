@@ -23,6 +23,9 @@
             android:id="@+id/action_navigation_trip_to_navigation_login"
             app:destination="@id/navigation_login"
             app:popUpTo="@id/mobile_navigation" />
+        <action
+            android:id="@+id/action_navigation_trip_to_finishTripFragment"
+            app:destination="@id/finishTripFragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_map"
@@ -48,11 +51,16 @@
     <fragment
         android:id="@+id/navigation_trip_main"
         android:name="com.pam.gps.ui.trip.TripMainFragment"
-        android:label="fragment_trip_main"
+        android:label="@string/title_trip_details"
         tools:layout="@layout/fragment_trip_main">
         <argument
             android:name="trip"
             app:argType="com.pam.gps.model.Trip" />
     </fragment>
+    <fragment
+        android:id="@+id/finishTripFragment"
+        android:name="com.pam.gps.ui.currentTrip.FinishTripFragment"
+        android:label="@string/title_trip_finish"
+        tools:layout="@layout/finish_trip_fragment" />
 
 </navigation>
