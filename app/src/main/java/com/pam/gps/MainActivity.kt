@@ -10,21 +10,24 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
-import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
   private val mRequiredPermissions = arrayOf(
     android.Manifest.permission.ACCESS_FINE_LOCATION,
     android.Manifest.permission.READ_EXTERNAL_STORAGE,
-    android.Manifest.permission.ACCESS_MEDIA_LOCATION)
+    android.Manifest.permission.ACCESS_MEDIA_LOCATION
+  )
 
   private val cRequestPermissionsCode = 4321
+
+  private lateinit var mAppBarConfiguration: AppBarConfiguration
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -34,12 +37,10 @@ class MainActivity : AppCompatActivity() {
     val navController = findNavController(R.id.nav_host_fragment)
     // Passing each menu ID as a set of Ids because each
     // menu should be considered as top level destinations.
-    val appBarConfiguration = AppBarConfiguration(
-      setOf(
-        R.id.navigation_trip, R.id.navigation_home, R.id.navigation_map, R.id.navigation_login
-      )
-    )
-    setupActionBarWithNavController(navController, appBarConfiguration)
+
+    mAppBarConfiguration = AppBarConfiguration(navController.graph)
+
+    setupActionBarWithNavController(navController, mAppBarConfiguration)
     navView.setupWithNavController(navController)
     navController.addOnDestinationChangedListener { _, destination, _ ->
       when (destination.id) {
@@ -48,8 +49,8 @@ class MainActivity : AppCompatActivity() {
       }
     }
 
-    if(FirebaseAuth.getInstance().currentUser == null)
-        navController.navigate(R.id.action_navigation_home_to_navigation_login)
+    if (FirebaseAuth.getInstance().currentUser == null)
+      navController.navigate(R.id.action_navigation_home_to_navigation_login)
 
     if (intent.extras?.get("SENDER") == "Notification") {
       navController.navigate(R.id.navigation_trip)
@@ -57,6 +58,11 @@ class MainActivity : AppCompatActivity() {
 
     createNotificationChannel()
     requestPermissions()
+  }
+
+  override fun onSupportNavigateUp(): Boolean {
+    return findNavController(R.id.nav_host_fragment).navigateUp(mAppBarConfiguration)
+            || super.onSupportNavigateUp()
   }
 
 
@@ -81,6 +87,7 @@ class MainActivity : AppCompatActivity() {
       }
     }
   }
+
   private fun createNotificationChannel() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       val serviceChannel = NotificationChannel(
@@ -98,17 +105,20 @@ class MainActivity : AppCompatActivity() {
     ActivityCompat.requestPermissions(this, mRequiredPermissions, cRequestPermissionsCode)
   }
 
-  override fun onRequestPermissionsResult(requestCode: Int,
-                                          permissions: Array<String>,
-                                          grantResults: IntArray) {
+  override fun onRequestPermissionsResult(
+    requestCode: Int,
+    permissions: Array<String>,
+    grantResults: IntArray
+  ) {
     when (requestCode) {
       cRequestPermissionsCode -> {
         if ((grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED))
-          //TODO[AR]: Fix this shit, show a screen with info
+        //TODO[AR]: Fix this shit, show a screen with info
           requestPermissions()
         return
       }
-      else -> {}
+      else -> {
+      }
     }
   }
 
