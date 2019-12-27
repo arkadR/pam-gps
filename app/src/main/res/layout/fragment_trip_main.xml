@@ -1,36 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.home.trip_list.trip.TripMainFragment">
+    android:orientation="vertical">
 
     <Toolbar
         android:id="@+id/toolbar_trip"
+        style="@style/Widget.MaterialComponents.Toolbar.Primary"
         android:layout_width="match_parent"
-        android:layout_height="100dp" />
-    <!--        style="@style/ThemeOverlay.MaterialComponents.Toolbar.Surface" />-->
+        android:layout_height="wrap_content"
+        android:navigationIcon="?attr/homeAsUpIndicator" />
 
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/details_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.pam.gps.MainActivity" />
+        tools:context=".ui.home.trip_list.trip.TripMainFragment">
 
-<!--    TODO[AR]: Fix card elevation (maybe a custom outliner?)-->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/bottom_sheet"
-        android:name="com.pam.gps.ui.home.trip_list.trip.TripDetailsFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:focusable="true"
-        android:background="@drawable/bottom_sheet_background"
-        android:elevation="20dp"
-        app:behavior_hideable="false"
-        app:behavior_peekHeight="156dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/details_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context="com.pam.gps.MainActivity" />
+
+        <!--    TODO[AR]: Fix card elevation (maybe a custom outliner?)-->
+        <androidx.fragment.app.FragmentContainerView
+            android:id="@+id/bottom_sheet"
+            android:name="com.pam.gps.ui.home.trip_list.trip.TripDetailsFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bottom_sheet_background"
+            android:clickable="true"
+            android:elevation="20dp"
+            android:focusable="true"
+            app:behavior_hideable="false"
+            app:behavior_peekHeight="100dp"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</LinearLayout>

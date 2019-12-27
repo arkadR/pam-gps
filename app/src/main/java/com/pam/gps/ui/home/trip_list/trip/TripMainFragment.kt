@@ -7,11 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.observe
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.SupportMapFragment
 import com.pam.gps.R
 import com.pam.gps.extensions.addPath
 import com.pam.gps.extensions.centerOnPath
+import kotlinx.android.synthetic.main.fragment_trip_main.*
 import timber.log.Timber
 
 
@@ -23,6 +26,7 @@ class TripMainFragment : Fragment() {
     viewModel.selectedTrip.value = args.trip
   }
 
+
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
@@ -32,6 +36,14 @@ class TripMainFragment : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    toolbar_trip.setNavigationOnClickListener {
+      findNavController().navigateUp()
+    }
+    viewModel.selectedTrip.observe(viewLifecycleOwner) { trip ->
+      toolbar_trip.title = trip?.title ?: ""
+    }
+
     val mapFragment = childFragmentManager
       .findFragmentById(R.id.details_map) as SupportMapFragment
 

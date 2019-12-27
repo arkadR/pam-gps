@@ -1,7 +1,10 @@
 package com.pam.gps.ui.current_trip
 
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.observe
@@ -10,7 +13,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pam.gps.R
 import com.pam.gps.utils.hideKeyboard
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_finish_trip.*
 import kotlinx.android.synthetic.main.fragment_finish_trip.view.*
 
@@ -18,11 +20,6 @@ class FinishTripFragment : Fragment() {
 
   private val viewModel by viewModels<CurrentTripViewModel>()
   private lateinit var picturesAdapter: PictureSelectAdapter
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    setHasOptionsMenu(true)
-    super.onCreate(savedInstanceState)
-  }
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -33,13 +30,19 @@ class FinishTripFragment : Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
+
+    toolbar_finish_trip.inflateMenu(R.menu.finish_trip_menu)
+    toolbar_finish_trip.setOnMenuItemClickListener { item ->
+      when (item.itemId) {
+        R.id.finish_trip_save_button -> onSaveButton()
+        else -> throw RuntimeException("Menu item $item without handler clicked")
+      }
+    }
+
     viewModel.currentTrip.observe(viewLifecycleOwner) {
       if (it?.tripDetails?.pictures.isNullOrEmpty()) return@observe
       picturesAdapter.setData(it!!.tripDetails!!.pictures)
     }
-
-    val fab = activity?.fab
-    fab?.visibility = View.GONE
 
     viewModel.requestCurrentTripUpdate()
 
@@ -66,22 +69,11 @@ class FinishTripFragment : Fragment() {
     }
   }
 
-
-  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-    inflater.inflate(R.menu.finish_trip_menu, menu)
-    super.onCreateOptionsMenu(menu, inflater)
-  }
-
-  override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    return when (item.itemId) {
-      R.id.finish_trip_save_button -> {
-        hideKeyboard(requireContext(), requireView())
-        saveTrip()
-        findNavController().navigate(R.id.action_finishTripFragment_to_navigation_home)
-        true
-      }
-      else -> super.onOptionsItemSelected(item)
-    }
+  fun onSaveButton(): Boolean {
+    hideKeyboard(requireContext(), requireView())
+    saveTrip()
+    findNavController().navigate(R.id.action_finishTripFragment_to_navigation_home)
+    return true
   }
 
   private fun saveTrip() {
