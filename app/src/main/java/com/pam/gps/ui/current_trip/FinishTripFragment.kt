@@ -32,6 +32,9 @@ class FinishTripFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
 
     toolbar_finish_trip.inflateMenu(R.menu.finish_trip_menu)
+    toolbar_finish_trip.setNavigationOnClickListener {
+      findNavController().navigateUp()
+    }
     toolbar_finish_trip.setOnMenuItemClickListener { item ->
       when (item.itemId) {
         R.id.finish_trip_save_button -> onSaveButton()
@@ -68,6 +71,7 @@ class FinishTripFragment : Fragment() {
       })
     }
   }
+
 
   fun onSaveButton(): Boolean {
     hideKeyboard(requireContext(), requireView())

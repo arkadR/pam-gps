@@ -10,6 +10,7 @@
     <Toolbar
         android:id="@+id/toolbar_trip"
         style="@style/Widget.MaterialComponents.Toolbar.Primary"
+        android:titleTextColor="@color/colorOnPrimary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:navigationIcon="?attr/homeAsUpIndicator" />

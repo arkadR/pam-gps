@@ -11,6 +11,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.pam.gps.R
 import com.pam.gps.TrackerService
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_current_trip.*
 
 class CurrentTripFragment : Fragment() {
@@ -21,6 +22,7 @@ class CurrentTripFragment : Fragment() {
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
+
     return inflater.inflate(R.layout.fragment_current_trip, container, false)
   }
 
@@ -30,20 +32,23 @@ class CurrentTripFragment : Fragment() {
       FirebaseAuth.getInstance().signOut()
       findNavController().navigate(R.id.action_navigation_trip_to_navigation_login)
     }
-
-    val fab = fab_current_trip
-    val isRunning = TrackerService.isRunning
-    setupCurrentTripFab(fab, isRunning)
+    setupCurrentTripFab(requireActivity().fab)
   }
 
+  //TODO[ME] clean up this mess
   private fun setupCurrentTripFab(
-    fab: FloatingActionButton,
-    isRunning: Boolean
+    fab: FloatingActionButton
   ) {
-    fab.setImageResource(if (isRunning) R.drawable.ic_stop_tracker else R.drawable.ic_start_tracker)
+    fab.setImageResource(if (TrackerService.isRunning) R.drawable.ic_stop_tracker else R.drawable.ic_start_tracker)
+
     fab.setOnClickListener {
-      TrackerService.stop(requireContext())
-      findNavController().navigate(R.id.action_navigation_trip_to_finishTripFragment)
+      if (TrackerService.isRunning) {
+        TrackerService.stop(requireContext())
+        findNavController().navigate(R.id.action_navigation_trip_to_finishTripFragment)
+      } else {
+        TrackerService.start(requireContext())
+        fab.setImageResource(R.drawable.ic_stop_tracker)
+      }
     }
   }
 }

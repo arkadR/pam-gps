@@ -5,11 +5,14 @@ import android.app.NotificationManager
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
+import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,8 +30,6 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    //setSupportActionBar(bottom_appbar)
-
     val navController = findNavController(R.id.nav_host_fragment)
 
     if (FirebaseAuth.getInstance().currentUser == null)
@@ -38,9 +39,35 @@ class MainActivity : AppCompatActivity() {
       navController.navigate(R.id.navigation_current_trip)
     }
 
+    findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener { _, destination, _ ->
+      when (destination.id) {
+        R.id.navigation_home -> {
+          showBottomAppBar()
+          bottom_appbar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
+        }
+
+        R.id.navigation_current_trip -> {
+          showBottomAppBar()
+          bottom_appbar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
+        }
+        else -> hideBottomAppBar()
+      }
+    }
+
     createNotificationChannel()
     requestPermissions()
   }
+
+  private fun hideBottomAppBar() {
+    bottom_appbar.performHide()
+    fab.visibility = View.GONE
+  }
+
+  private fun showBottomAppBar() {
+    bottom_appbar.performShow()
+    fab.visibility = View.VISIBLE
+  }
+
 
   private fun createNotificationChannel() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

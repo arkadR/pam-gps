@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayoutMediator
 import com.pam.gps.R
 import com.pam.gps.TrackerService
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
 
 
@@ -35,18 +35,21 @@ class HomeFragment : Fragment() {
       tab.text = adpt.getTitleForPosition(position)
     }.attach()
 
-
-    setupHomeFab(fab, TrackerService.isRunning)
+    setupHomeFab()
   }
 
-  private fun setupHomeFab(fab: FloatingActionButton, isRunning: Boolean) {
-    fab.setImageResource(
+  private fun setupHomeFab() {
+    val isRunning = TrackerService.isRunning
+
+
+    requireActivity().fab.setImageResource(
       if (isRunning)
         R.drawable.ic_trip_pace else R.drawable.ic_start_tracker
     )
 
-    fab.setOnClickListener {
+    requireActivity().fab.setOnClickListener {
       if (!isRunning) TrackerService.start(requireContext())
+
       findNavController()
         .navigate(R.id.action_global_navigation_current_trip)
     }

@@ -56,4 +56,5 @@ class TripMainFragment : Fragment() {
     })
   }
 
+
 }

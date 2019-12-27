@@ -43,6 +43,5 @@ class TripDetailsFragment : Fragment() {
         txtTripPace.text = it.paceInMinutesPerKm.withDecimalPlaces(2) + "min/km"
       }
     })
-
   }
 }
