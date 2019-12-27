@@ -1,11 +1,11 @@
-package com.pam.gps.ui.trip
+package com.pam.gps.ui.home.trip_list.trip
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.pam.gps.R
-import com.pam.gps.ui.bindingAdapters.bindStorageUri
+import com.pam.gps.ui.binding_adapters.bindStorageUri
 
 class PicturesAdapter : RecyclerView.Adapter<PicturesAdapter.PictureViewHolder>() {
   private var data: List<String> = emptyList()

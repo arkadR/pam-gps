@@ -12,7 +12,7 @@
 
         <variable
             name="holder"
-            type="com.pam.gps.ui.home.TripListAdapter.TripViewHolder" />
+            type="com.pam.gps.ui.home.trip_list.TripListAdapter.TripViewHolder" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -22,6 +22,7 @@
         android:onClick="@{(view) -> holder.navigateToTripDetails(view, trip)}"
         app:cardCornerRadius="10dp"
         app:cardElevation="10dp">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -48,7 +49,7 @@
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Body2"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -58,14 +59,15 @@
             <TextView
                 android:id="@+id/trip_date_text"
                 android:text="@{DateFormat.getDateInstance().format(trip.date.toDate())}"
+                tools:text="2 gru 2014"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                app:layout_constraintEnd_toStartOf="@+id/txtTripDistance"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintEnd_toStartOf="@+id/txtTripDistance"
                 app:layout_constraintStart_toEndOf="@+id/imgTripPreview"
                 app:layout_constraintTop_toBottomOf="@+id/txtTripTitle" />
 
@@ -94,30 +96,22 @@
 
             <Button
                 android:id="@+id/btnEdit"
-                style="@style/Widget.MaterialComponents.Button.TextButton"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:text="@string/trip_card_edit_button_placeholder"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btnShare"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/imgTripPreview"
                 app:layout_constraintTop_toBottomOf="@+id/divTripCard" />
 
             <Button
                 android:id="@+id/btnShare"
-                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                style="@style/Widget.MaterialComponents.Button.TextButton.Icon.Margin"
                 app:icon="@drawable/ic_share_black_24dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:text="@string/trip_card_share_button_placeholder"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

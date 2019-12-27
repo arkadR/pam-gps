@@ -5,7 +5,13 @@
     android:id="@+id/coordinator"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.trip.TripMainFragment">
+    tools:context=".ui.home.trip_list.trip.TripMainFragment">
+
+    <Toolbar
+        android:id="@+id/toolbar_trip"
+        android:layout_width="match_parent"
+        android:layout_height="100dp" />
+    <!--        style="@style/ThemeOverlay.MaterialComponents.Toolbar.Surface" />-->
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/details_map"
@@ -17,7 +23,7 @@
 <!--    TODO[AR]: Fix card elevation (maybe a custom outliner?)-->
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/bottom_sheet"
-        android:name="com.pam.gps.ui.trip.TripDetailsFragment"
+        android:name="com.pam.gps.ui.home.trip_list.trip.TripDetailsFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clickable="true"
@@ -25,6 +31,6 @@
         android:background="@drawable/bottom_sheet_background"
         android:elevation="20dp"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="100dp"
+        app:behavior_peekHeight="156dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

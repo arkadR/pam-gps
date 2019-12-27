@@ -1,4 +1,4 @@
-package com.pam.gps.ui.home
+package com.pam.gps.ui.home.trip_list
 
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pam.gps.BR
 import com.pam.gps.R
 import com.pam.gps.model.Trip
+import com.pam.gps.ui.home.HomeFragmentDirections
 
 class TripListAdapter : RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
 
@@ -23,6 +24,7 @@ class TripListAdapter : RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
     }
 
     fun navigateToTripDetails(view: View, trip: Trip) {
+      //TODO
       view.findNavController()
         .navigate(
           HomeFragmentDirections.actionNavigationHomeToTripFragmentMain(trip)

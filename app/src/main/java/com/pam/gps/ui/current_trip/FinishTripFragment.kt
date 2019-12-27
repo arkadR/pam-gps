@@ -1,17 +1,18 @@
-package com.pam.gps.ui.currentTrip
+package com.pam.gps.ui.current_trip
 
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.pam.gps.R
 import com.pam.gps.utils.hideKeyboard
-import kotlinx.android.synthetic.main.finish_trip_fragment.*
-import kotlinx.android.synthetic.main.finish_trip_fragment.view.*
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_finish_trip.*
+import kotlinx.android.synthetic.main.fragment_finish_trip.view.*
 
 class FinishTripFragment : Fragment() {
 
@@ -27,37 +28,41 @@ class FinishTripFragment : Fragment() {
     inflater: LayoutInflater, container: ViewGroup?,
     savedInstanceState: Bundle?
   ): View? {
-    return inflater.inflate(R.layout.finish_trip_fragment, container, false)
+    return inflater.inflate(R.layout.fragment_finish_trip, container, false)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    lifecycleScope.launchWhenResumed {
-      picturesAdapter = PictureSelectAdapter(
-        requireContext(),
-        viewModel.currentTrip.await()?.tripDetails?.pictures ?: emptyList()
-      )
+    viewModel.currentTrip.observe(viewLifecycleOwner) {
+      if (it?.tripDetails?.pictures.isNullOrEmpty()) return@observe
+      picturesAdapter.setData(it!!.tripDetails!!.pictures)
+    }
 
-      with(view.pictures_recycler) {
-        adapter = picturesAdapter
+    val fab = activity?.fab
+    fab?.visibility = View.GONE
 
-        layoutManager = GridLayoutManager(requireContext(), 3)
+    viewModel.requestCurrentTripUpdate()
 
-        addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
-          override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-            val child: View? = findChildViewUnder(e.x, e.y)
-            if (child != null) {
-              val newSelectedIndex = getChildAdapterPosition(child)
-              val oldSelectedIndex = picturesAdapter.selectedPosition
-              picturesAdapter.selectedPosition = newSelectedIndex
+    picturesAdapter = PictureSelectAdapter()
 
-              picturesAdapter.notifyItemChanged(oldSelectedIndex)
-              picturesAdapter.notifyItemChanged(newSelectedIndex)
-            }
-            return false
-          }
-        })
-      }
+    with(view.pictures_recycler) {
+      adapter = picturesAdapter
+      layoutManager = GridLayoutManager(requireContext(), 3)
+
+      addOnItemTouchListener(object : RecyclerView.SimpleOnItemTouchListener() {
+        override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+          val child: View = findChildViewUnder(e.x, e.y) ?: return false
+
+          val newSelectedIndex = getChildAdapterPosition(child)
+          val oldSelectedIndex = picturesAdapter.selectedPosition
+
+          picturesAdapter.selectedPosition = newSelectedIndex
+          picturesAdapter.notifyItemChanged(oldSelectedIndex)
+          picturesAdapter.notifyItemChanged(newSelectedIndex)
+
+          return false
+        }
+      })
     }
   }
 

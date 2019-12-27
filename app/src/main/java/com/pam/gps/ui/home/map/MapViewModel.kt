@@ -1,10 +1,9 @@
-package com.pam.gps.ui.map
+package com.pam.gps.ui.home.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.pam.gps.repositories.TripsRepository
 import kotlinx.coroutines.flow.transform
-import kotlinx.coroutines.runBlocking
 
 class MapViewModel : ViewModel() {
 

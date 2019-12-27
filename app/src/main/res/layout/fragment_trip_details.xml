@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="50dp"
-        tools:context=".ui.trip.TripDetailsFragment">
+        tools:context=".ui.home.trip_list.trip.TripDetailsFragment">
 
         <TextView
             android:id="@+id/txtTripDistance"

@@ -12,11 +12,14 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_navigation_home_to_tripFragmentMain"
-            app:destination="@id/navigation_trip_main" />
+            app:destination="@id/navigation_single_trip" />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_current_trip"
+            app:destination="@id/navigation_current_trip" />
     </fragment>
     <fragment
-        android:id="@+id/navigation_trip"
-        android:name="com.pam.gps.ui.currentTrip.CurrentTripFragment"
+        android:id="@+id/navigation_current_trip"
+        android:name="com.pam.gps.ui.current_trip.CurrentTripFragment"
         android:label="@string/title_trip"
         tools:layout="@layout/fragment_current_trip">
         <action
@@ -27,11 +30,6 @@
             android:id="@+id/action_navigation_trip_to_finishTripFragment"
             app:destination="@id/finishTripFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/navigation_map"
-        android:name="com.pam.gps.ui.map.MapFragment"
-        android:label="@string/title_map"
-        tools:layout="@layout/fragment_map" />
     <fragment
         android:id="@+id/navigation_login"
         android:name="com.pam.gps.ui.sign_in.SignInFragment"
@@ -49,8 +47,8 @@
         app:popUpTo="@id/navigation_home"
         app:popUpToInclusive="true" />
     <fragment
-        android:id="@+id/navigation_trip_main"
-        android:name="com.pam.gps.ui.trip.TripMainFragment"
+        android:id="@+id/navigation_single_trip"
+        android:name="com.pam.gps.ui.home.trip_list.trip.TripMainFragment"
         android:label="@string/title_trip_details"
         tools:layout="@layout/fragment_trip_main">
         <argument
@@ -59,13 +57,17 @@
     </fragment>
     <fragment
         android:id="@+id/finishTripFragment"
-        android:name="com.pam.gps.ui.currentTrip.FinishTripFragment"
+        android:name="com.pam.gps.ui.current_trip.FinishTripFragment"
         android:label="@string/title_trip_finish"
-        tools:layout="@layout/finish_trip_fragment">
+        tools:layout="@layout/fragment_finish_trip">
         <action
             android:id="@+id/action_finishTripFragment_to_navigation_home"
             app:destination="@id/navigation_home"
             app:popUpTo="@id/navigation_home" />
     </fragment>
+    <action
+        android:id="@+id/action_global_navigation_current_trip"
+        app:destination="@id/navigation_current_trip"
+        app:popUpTo="@id/navigation_home" />
 
 </navigation>

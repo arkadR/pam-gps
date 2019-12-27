@@ -3,10 +3,12 @@ package com.pam.gps
 import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 import com.pam.gps.model.Coordinate
 import com.pam.gps.model.CurrentTrip
@@ -16,7 +18,6 @@ import com.pam.gps.repositories.TripsRepository
 import kotlinx.coroutines.*
 import timber.log.Timber
 
-@InternalCoroutinesApi
 class TrackerService : Service() {
 
   companion object {
@@ -24,6 +25,22 @@ class TrackerService : Service() {
     const val START_SERVICE_CODE = "START_SERVICE"
     private var isCreated = false
     val isRunning get() = isCreated
+
+    fun start(context: Context) {
+      val startIntent = Intent(context, TrackerService::class.java)
+        .apply {
+          action = START_SERVICE_CODE
+        }
+      ContextCompat.startForegroundService(context, startIntent)
+    }
+
+    fun stop(context: Context) {
+      val stopIntent = Intent(context, TrackerService::class.java)
+        .apply {
+          action = STOP_SERVICE_CODE
+        }
+      ContextCompat.startForegroundService(context, stopIntent)
+    }
   }
 
   private lateinit var mFusedLocationClient: FusedLocationProviderClient

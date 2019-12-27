@@ -1,6 +1,5 @@
-package com.pam.gps.ui.currentTrip
+package com.pam.gps.ui.current_trip
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -9,15 +8,16 @@ import com.pam.gps.R
 import timber.log.Timber
 
 class PictureSelectAdapter(
-  context: Context,
-  var imageUris: List<String>,
+  var imageUris: List<String> = emptyList(),
   var selectedPosition: Int = 0
 ) : RecyclerView.Adapter<PictureSelectViewHolder>() {
-  private val inflater = LayoutInflater.from(context)
 
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureSelectViewHolder =
-    PictureSelectViewHolder(inflater.inflate(R.layout.picture, parent, false) as ImageView)
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureSelectViewHolder {
+    val inflater = LayoutInflater.from(parent.context)
+    val view = inflater.inflate(R.layout.picture, parent, false) as ImageView
+    return PictureSelectViewHolder(view)
+  }
 
   override fun getItemCount(): Int = imageUris.count()
 
@@ -25,5 +25,10 @@ class PictureSelectAdapter(
     val uri = imageUris[position]
     Timber.d("binding position $position, selected postion = $selectedPosition")
     holder.bind(position == selectedPosition, uri)
+  }
+
+  fun setData(imageUris: List<String>) {
+    this.imageUris = imageUris
+    notifyDataSetChanged()
   }
 }

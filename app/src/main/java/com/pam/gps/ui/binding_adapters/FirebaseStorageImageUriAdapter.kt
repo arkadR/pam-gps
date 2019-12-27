@@ -1,4 +1,4 @@
-package com.pam.gps.ui.bindingAdapters
+package com.pam.gps.ui.binding_adapters
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter

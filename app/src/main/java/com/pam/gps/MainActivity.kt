@@ -5,14 +5,11 @@ import android.app.NotificationManager
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.setupWithNavController
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,56 +26,20 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    setSupportActionBar(toolbar)
-    supportActionBar?.setDisplayShowTitleEnabled(false)
+
+    //setSupportActionBar(bottom_appbar)
 
     val navController = findNavController(R.id.nav_host_fragment)
-
-    toolbar.setupWithNavController(
-      navController,
-      AppBarConfiguration(setOf(R.id.navigation_home, R.id.navigation_map, R.id.navigation_trip))
-    )
-
-    nav_view.setupWithNavController(navController)
-
-    navController.addOnDestinationChangedListener { _, destination, _ ->
-      when (destination.id) {
-        R.id.navigation_login -> hideBottomNavigation()
-        else -> showBottomNavigation()
-      }
-    }
 
     if (FirebaseAuth.getInstance().currentUser == null)
       navController.navigate(R.id.action_navigation_home_to_navigation_login)
 
     if (intent.extras?.get("SENDER") == "Notification") {
-      navController.navigate(R.id.navigation_trip)
+      navController.navigate(R.id.navigation_current_trip)
     }
 
     createNotificationChannel()
     requestPermissions()
-  }
-
-  private fun hideBottomNavigation() {
-    nav_view.run {
-      if (visibility == View.VISIBLE && alpha == 1f) {
-        animate()
-          .alpha(0f)
-          .withEndAction { visibility = View.GONE }
-          .duration = 250
-      }
-    }
-  }
-
-  private fun showBottomNavigation() {
-    nav_view.run {
-      if (visibility == View.GONE && alpha == 0f) {
-        animate()
-          .alpha(1f)
-          .withEndAction { visibility = View.VISIBLE }
-          .duration = 250
-      }
-    }
   }
 
   private fun createNotificationChannel() {

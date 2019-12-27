@@ -1,4 +1,4 @@
-package com.pam.gps.ui.trip
+package com.pam.gps.ui.home.trip_list.trip
 
 import android.os.Bundle
 import android.view.LayoutInflater

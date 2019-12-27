@@ -24,7 +24,22 @@
         <item name="shapeAppearanceLargeComponent">
             @style/CustomLargeShape
         </item>
+    </style>
 
+    <style name="Widget.MaterialComponents.Button.TextButton.Icon.Margin" parent="Widget.MaterialComponents.Button.TextButton.Icon">
+
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
+
+    </style>
+
+    <style name="Widget.MaterialComponents.Button.TextButton.Margin" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:layout_marginTop">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginBottom">@dimen/activity_vertical_margin</item>
+        <item name="android:layout_marginLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/activity_horizontal_margin</item>
     </style>
 
     <style name="CustomMediumShape" parent="ShapeAppearance.MaterialComponents.MediumComponent">
@@ -33,6 +48,10 @@
 
     <style name="CustomLargeShape" parent="ShapeAppearance.MaterialComponents.LargeComponent">
         <item name="cornerRadius">30dp</item>
+    </style>
+
+    <style name="Widget.Overlay.Transparent" parent="">
+        <item name="backgroundColor">@color/colorWhite</item>
     </style>
 
 </resources>

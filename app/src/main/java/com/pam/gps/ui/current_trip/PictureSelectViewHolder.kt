@@ -1,8 +1,8 @@
-package com.pam.gps.ui.currentTrip
+package com.pam.gps.ui.current_trip
 
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
-import com.pam.gps.ui.bindingAdapters.bindStorageUri
+import com.pam.gps.ui.binding_adapters.bindStorageUri
 
 class PictureSelectViewHolder(private val imageView: ImageView) :
   RecyclerView.ViewHolder(imageView) {

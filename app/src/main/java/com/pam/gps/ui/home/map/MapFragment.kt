@@ -1,4 +1,4 @@
-package com.pam.gps.ui.map
+package com.pam.gps.ui.home.map
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,9 +12,7 @@ import com.google.maps.android.clustering.ClusterManager
 import com.pam.gps.R
 import com.pam.gps.extensions.addPath
 import kotlinx.android.synthetic.main.fragment_map.*
-import kotlinx.coroutines.InternalCoroutinesApi
 
-@InternalCoroutinesApi
 class MapFragment : Fragment() {
 
   private val mapViewModel by viewModels<MapViewModel>()
