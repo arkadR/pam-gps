@@ -4,26 +4,41 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.MapView
 import com.pam.gps.R
 import com.pam.gps.extensions.addPath
 import com.pam.gps.extensions.centerOnPath
 import kotlinx.android.synthetic.main.fragment_trip_main.*
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import timber.log.Timber
 
 
 class TripMainFragment : Fragment() {
   private val args: TripMainFragmentArgs by navArgs()
   private val viewModel by activityViewModels<TripViewModel>()
+
+  private lateinit var mapView: MapView
+  private lateinit var mapLoadingJob: Job
+
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     viewModel.selectedTrip.value = args.trip
+
+    mapView = MapView(requireContext())
+    mapLoadingJob = lifecycleScope.launchWhenResumed {
+      delay(500)
+      mapView.onCreate(savedInstanceState)
+    }
   }
 
 
@@ -43,18 +58,28 @@ class TripMainFragment : Fragment() {
     viewModel.selectedTrip.observe(viewLifecycleOwner) { trip ->
       toolbar_trip.title = trip?.title ?: ""
     }
-
-    val mapFragment = childFragmentManager
-      .findFragmentById(R.id.details_map) as SupportMapFragment
-
-    viewModel.tripDetails.observe(viewLifecycleOwner, Observer { tripDetails ->
-      Timber.d("trip details = $tripDetails")
-      mapFragment.getMapAsync { googleMap ->
-        googleMap.addPath(tripDetails!!.coordinates)
-        if (tripDetails.coordinates.isNotEmpty()) googleMap.centerOnPath(tripDetails.coordinates)
-      }
-    })
   }
 
-
+  override fun onResume() {
+    super.onResume()
+    lifecycleScope.launchWhenResumed {
+      mapLoadingJob.join()
+      trip_main_progress_bar.visibility = View.GONE
+      details_map_view.addView(
+        mapView,
+        FrameLayout.LayoutParams(
+          FrameLayout.LayoutParams.MATCH_PARENT,
+          FrameLayout.LayoutParams.MATCH_PARENT
+        )
+      )
+      viewModel.tripDetails.observe(viewLifecycleOwner, Observer { tripDetails ->
+        Timber.d("trip details = $tripDetails")
+        mapView.getMapAsync { googleMap ->
+          googleMap.addPath(tripDetails!!.coordinates)
+          if (tripDetails.coordinates.isNotEmpty()) googleMap.centerOnPath(tripDetails.coordinates)
+        }
+      })
+      mapView.onResume()
+    }
+  }
 }
