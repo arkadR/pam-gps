@@ -4,5 +4,11 @@
     <item
         android:id="@+id/finish_trip_save_button"
         android:title="@string/save_button_text"
-        app:showAsAction="always" />
+        android:enabled="false"
+        app:showAsAction="always|withText" />
+    <item
+        android:id="@+id/finish_trip_discard_button"
+        android:title="@string/discard_button_text"
+        app:showAsAction="ifRoom|withText"
+        android:icon="@drawable/ic_delete" />
 </menu>

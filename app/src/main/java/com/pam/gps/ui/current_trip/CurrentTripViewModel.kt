@@ -23,6 +23,12 @@ class CurrentTripViewModel : ViewModel() {
     }
   }
 
+  fun discardTrip() {
+    GlobalScope.launch {
+      mTripsRepository.discardTrip()
+    }
+  }
+
   fun requestCurrentTripUpdate() {
     viewModelScope.launch {
       mCurrentTrip.value = mTripsRepository.getCurrentTripSnapshot()

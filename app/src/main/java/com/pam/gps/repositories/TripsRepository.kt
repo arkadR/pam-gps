@@ -92,28 +92,37 @@ open class TripsRepository {
       throw RuntimeException("trip = $trip, tripDetails = $tripDetails while finishing trip")
     val tripDetailsReference = dbTripsDetailsCollection.document(tripDetails.id)
 
-    //TODO[ME] testing purposes, although I believe that just deleting a trip is confusing to user (I just got super confused!)
-    //if (tripDetails.coordinates.size < 2) {
-    if (false) {
-      db.runBatch { batch ->
-        batch.delete(tripDetailsReference)
-        batch.delete(dbCurrentUserCurrentTripReference)
-      }.await()
+    //TODO[AR] This was done because saving a trip without any coords fucks up the rest of the code, consider this again
+    if (tripDetails.coordinates.size < 2) {
+      discardTrip()
+      return
     }
-    else {
-      val tripReference = dbCurrentUserTripsCollection.document()
-      val tripWithIds = trip.copy(
-        id = tripReference.id,
-        details = tripDetails.id,
-        title = title,
-        picture = thumbnailPath
-      )
-      db.runBatch { batch ->
-        batch.set(tripReference, tripWithIds)
-        batch.set(tripDetailsReference, tripDetails.copy(title = title))
-        batch.delete(dbCurrentUserCurrentTripReference)
-      }.await()
-    }
+    val tripReference = dbCurrentUserTripsCollection.document()
+    val tripWithIds = trip.copy(
+      id = tripReference.id,
+      details = tripDetails.id,
+      title = title,
+      picture = thumbnailPath
+    )
+    db.runBatch { batch ->
+      batch.set(tripReference, tripWithIds)
+      batch.set(tripDetailsReference, tripDetails.copy(title = title))
+      batch.delete(dbCurrentUserCurrentTripReference)
+    }.await()
+  }
+
+
+  suspend fun discardTrip() {
+    val (_, trip, tripDetails) = getCurrentTripSnapshot()
+      ?: throw RuntimeException("Current trip returned null")
+    if (trip == null || tripDetails == null)
+      throw RuntimeException("trip = $trip, tripDetails = $tripDetails while finishing trip")
+    val tripDetailsReference = dbTripsDetailsCollection.document(tripDetails.id)
+
+    db.runBatch { batch ->
+      batch.delete(tripDetailsReference)
+      batch.delete(dbCurrentUserCurrentTripReference)
+    }.await()
   }
 
   fun getAllTripsDetails(): Flow<List<TripDetails>> {
