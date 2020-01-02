@@ -14,9 +14,9 @@ import com.google.android.gms.maps.MapView
 import com.google.maps.android.clustering.ClusterManager
 import com.pam.gps.R
 import com.pam.gps.extensions.addPath
+import com.pam.gps.utils.downloadFromFirebase
 import kotlinx.android.synthetic.main.fragment_map.*
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.*
 
 class MapFragment : Fragment() {
 
@@ -82,15 +82,19 @@ class MapFragment : Fragment() {
 
   private fun setUpClusterManager(googleMap: GoogleMap) {
     mClusterManager = ClusterManager(this.context, googleMap)
+    mClusterManager.renderer = IconMarkerManagerRenderer(requireContext(), googleMap, mClusterManager)
     googleMap.setOnCameraIdleListener(mClusterManager)
     googleMap.setOnMarkerClickListener(mClusterManager)
     mClusterManager.setAnimation(true)
     //TODO[AR] Change markers to photos, draw path from coords
     mapViewModel.mapMarkers.observe(viewLifecycleOwner, Observer { markerList ->
       for (mapMarker in markerList) {
-        mClusterManager.addItem(mapMarker)
+        GlobalScope.launch {
+          mapMarker.localPath = downloadFromFirebase(mapMarker.pictureUri)
+          mClusterManager.addItem(mapMarker)
+          launch(Dispatchers.Main) { mClusterManager.cluster() }
+        }
       }
-      mClusterManager.cluster()
     })
     mapViewModel.tripPaths.observe(viewLifecycleOwner, Observer { pathList ->
       for (path in pathList) {

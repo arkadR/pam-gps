@@ -2,8 +2,13 @@ package com.pam.gps.ui.home.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import com.google.android.gms.maps.model.LatLng
 import com.pam.gps.repositories.TripsRepository
+import com.pam.gps.utils.downloadFromFirebase
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.transform
+import kotlinx.coroutines.launch
+import kotlin.random.Random
 
 class MapViewModel : ViewModel() {
 
@@ -26,8 +31,13 @@ class MapViewModel : ViewModel() {
   val mapMarkers =
     allTripDetails
       .transform { allDetails ->
-        emit (allDetails.flatMap { details -> details.coordinates }
-          .map { coord -> MapMarker(coord) })
+        emit (allDetails.flatMap { details -> details.pictures }
+          .map { pictureUri -> MapMarker(
+            LatLng(
+              Random.nextDouble(0.0, 10.0),
+              Random.nextDouble(0.0, 10.0)
+            ), pictureUri)
+          })
       }
       .asLiveData()
 
