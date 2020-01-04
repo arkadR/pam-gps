@@ -4,11 +4,15 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.provider.MediaStore
+import com.pam.gps.utils.LocalPhotoCache
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import timber.log.Timber
 import java.util.*
 
-class LocalPhotosRepository(val context: Context) {
+class LocalPhotosRepository(val context: Context): KoinComponent {
 
+  private val cache: LocalPhotoCache by inject()
 
   @Suppress("DEPRECATION")
   @SuppressLint("InlinedApi")

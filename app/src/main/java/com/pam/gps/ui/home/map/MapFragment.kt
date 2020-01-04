@@ -1,5 +1,6 @@
 package com.pam.gps.ui.home.map
 
+import android.media.ExifInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
+import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
 import com.pam.gps.R
 import com.pam.gps.extensions.addPath
@@ -90,7 +92,7 @@ class MapFragment : Fragment() {
     mapViewModel.mapMarkers.observe(viewLifecycleOwner, Observer { markerList ->
       for (mapMarker in markerList) {
         GlobalScope.launch {
-          mapMarker.localPath = downloadFromFirebase(mapMarker.pictureUri)
+          mapMarker.prepareMarker()
           mClusterManager.addItem(mapMarker)
           launch(Dispatchers.Main) { mClusterManager.cluster() }
         }

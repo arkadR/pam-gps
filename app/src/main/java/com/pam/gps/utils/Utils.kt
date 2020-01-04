@@ -21,23 +21,3 @@ fun hideKeyboard(context: Context, view: View): Unit {
   val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
   imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
-
-suspend fun downloadFromFirebase(uri: String): String {
-  Timber.d("Getting bitmap from $uri")
-  return suspendCoroutine { cont ->
-    val ref = FirebaseStorage.getInstance().getReference(uri);
-    try {
-      val localFile = File.createTempFile("Image", "bmp");
-      Timber.d("Created a temp file: $localFile")
-      ref.getFile(localFile)
-        .addOnSuccessListener {
-          Timber.d("Got the image!")
-          cont.resume(localFile.absolutePath)
-        }
-        .addOnFailureListener { exc -> Timber.d(exc); cont.resumeWithException(exc) }
-    } catch (exc: IOException) {
-      Timber.d(exc)
-      cont.resumeWithException(exc)
-    }
-  }
-}

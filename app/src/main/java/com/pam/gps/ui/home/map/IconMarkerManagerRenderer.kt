@@ -1,6 +1,7 @@
 package com.pam.gps.ui.home.map
 
 import android.content.Context
+import android.media.ExifInterface
 import android.widget.ImageView
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
@@ -9,6 +10,7 @@ import com.google.maps.android.clustering.ClusterManager
 import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.ui.IconGenerator
 import com.pam.gps.extensions.BitmapFactory
+import timber.log.Timber
 
 class IconMarkerManagerRenderer(private val context: Context, googleMap: GoogleMap, clusterManager: ClusterManager<MapMarker>)
   : DefaultClusterRenderer<MapMarker>(context, googleMap, clusterManager) {
