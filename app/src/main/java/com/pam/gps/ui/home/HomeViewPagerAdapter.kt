@@ -4,7 +4,9 @@ import androidx.fragment.app.Fragment
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.pam.gps.ui.home.map.MapFragment
 import com.pam.gps.ui.home.trip_list.TripListFragment
+import kotlinx.coroutines.InternalCoroutinesApi
 
+@InternalCoroutinesApi
 class HomeViewPagerAdapter(fragment: Fragment) : FragmentStateAdapter(fragment) {
   override fun getItemCount(): Int = 2
 

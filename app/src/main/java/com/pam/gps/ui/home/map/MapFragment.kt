@@ -1,6 +1,5 @@
 package com.pam.gps.ui.home.map
 
-import android.media.ExifInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,14 +11,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.clustering.ClusterManager
 import com.pam.gps.R
 import com.pam.gps.extensions.addPath
-import com.pam.gps.utils.downloadFromFirebase
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 
+@InternalCoroutinesApi
 class MapFragment : Fragment() {
 
   private val mapViewModel by viewModels<MapViewModel>()
@@ -89,15 +88,13 @@ class MapFragment : Fragment() {
     googleMap.setOnMarkerClickListener(mClusterManager)
     mClusterManager.setAnimation(true)
     //TODO[AR] Change markers to photos, draw path from coords
-    mapViewModel.mapMarkers.observe(viewLifecycleOwner, Observer { markerList ->
-      for (mapMarker in markerList) {
-        GlobalScope.launch {
-          mapMarker.prepareMarker()
-          mClusterManager.addItem(mapMarker)
-          launch(Dispatchers.Main) { mClusterManager.cluster() }
-        }
+    GlobalScope.launch {
+      mapViewModel.mapMarkers.collect { marker ->
+        marker.prepareMarker()
+        mClusterManager.addItem(marker)
+        launch(Dispatchers.Main) { mClusterManager.cluster() }
       }
-    })
+    }
     mapViewModel.tripPaths.observe(viewLifecycleOwner, Observer { pathList ->
       for (path in pathList) {
         googleMap.addPath(path)

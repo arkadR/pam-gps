@@ -10,9 +10,7 @@ import org.koin.core.inject
 import timber.log.Timber
 import java.util.*
 
-class LocalPhotosRepository(val context: Context): KoinComponent {
-
-  private val cache: LocalPhotoCache by inject()
+class LocalPhotosRepository(val context: Context) {
 
   @Suppress("DEPRECATION")
   @SuppressLint("InlinedApi")

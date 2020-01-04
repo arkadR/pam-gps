@@ -11,8 +11,10 @@ import com.pam.gps.R
 import com.pam.gps.TrackerService
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.InternalCoroutinesApi
 
 
+@InternalCoroutinesApi
 class HomeFragment : Fragment() {
 
   override fun onCreateView(

@@ -3,7 +3,9 @@ package com.pam.gps
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import com.pam.gps.repositories.LocalPhotosRepository
 import com.pam.gps.utils.LocalPhotoCache
+import com.pam.gps.utils.PhotoLocationCache
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
@@ -17,7 +19,9 @@ class Application : android.app.Application() {
     Timber.plant(Timber.DebugTree())
     val appModule = module {
       single(named("local_photo_cache_prefs")) { provideLocalPhotoCachePreferences(androidApplication()) }
-      single { LocalPhotoCache(provideLocalPhotoCachePreferences(androidApplication())) }
+      single(named("location_cache_prefs")) { provideLocationCachePreferences(androidApplication()) }
+      single { LocalPhotoCache() }
+      single { PhotoLocationCache() }
     }
     startKoin {
       androidContext(this@Application)
@@ -27,4 +31,7 @@ class Application : android.app.Application() {
 
   private fun provideLocalPhotoCachePreferences(app: Application): SharedPreferences =
     app.getSharedPreferences("com.pam.gps.LOCAL_PHOTO_CACHE", Context.MODE_PRIVATE)
+
+  private fun provideLocationCachePreferences(app: Application): SharedPreferences =
+    app.getSharedPreferences("com.pam.gps.LOCATION_CACHE", Context.MODE_PRIVATE)
 }

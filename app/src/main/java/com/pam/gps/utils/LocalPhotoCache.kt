@@ -2,7 +2,9 @@ package com.pam.gps.utils
 
 import android.content.SharedPreferences
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.runBlocking
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 import timber.log.Timber
 import java.io.File
 import java.io.IOException
@@ -10,7 +12,9 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
-class LocalPhotoCache(private val sharedPrefs: SharedPreferences) {
+class LocalPhotoCache: KoinComponent {
+
+  private val photosSharedPrefs: SharedPreferences by inject(named("local_photo_cache_prefs"))
 
   suspend fun getLocalPathByRef(ref: String): String {
     if (isCached(ref))
@@ -22,23 +26,22 @@ class LocalPhotoCache(private val sharedPrefs: SharedPreferences) {
   }
 
 
-
   private fun isCached(photoRef: String): Boolean {
-    return sharedPrefs.contains(photoRef)
+    return photosSharedPrefs.contains(photoRef)
   }
 
   private fun getLocalPath(photoRef: String): String {
     if (!isCached(photoRef))
       throw IllegalArgumentException("Photo with this reference is not cached!")
 
-    return sharedPrefs.getString(photoRef, null)!!
+    return photosSharedPrefs.getString(photoRef, null)!!
   }
 
   private fun cachePhoto(photoRef: String, localPath: String) {
     if (isCached(photoRef))
       throw IllegalArgumentException("Photo with passed reference is already cached!")
 
-    with(sharedPrefs.edit()) {
+    with(photosSharedPrefs.edit()) {
       putString(photoRef, localPath)
       commit()
     }
