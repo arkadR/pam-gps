@@ -8,11 +8,11 @@ data class TripDetails(
   val date: Timestamp = Timestamp.now(),
   val coordinates: List<Coordinate> = emptyList(),
   val access: List<User> = emptyList(),
-  val pictures: List<String> = emptyList()
+  val pictures: List<Picture> = emptyList()
 ) {
 
-  val distanceInKm: Double
-  get() {
+  //TODO[AR]: Ideally those would be properties but there is no way to tag a property as not serializable for firestore
+  fun distanceInKm(): Double {
     if (coordinates.size < 2)
       return 0.0
 //      throw Exception("Trip details with less than 2 coords should not exist.")
@@ -26,8 +26,7 @@ data class TripDetails(
       .fold(0.0, {acc, (prev, curr) -> acc + prev!!.distanceTo(curr) } ) / 1000
   }
 
-  val durationInSeconds: Long
-  get() {
+  fun durationInSeconds(): Long {
     if (coordinates.size < 2)
       return 0
 //      throw Exception("Trip details with less than 2 coords should not exist.")
@@ -38,8 +37,7 @@ data class TripDetails(
       .let { it.last()!!.seconds - it.first()!!.seconds }
   }
 
-  val paceInMinutesPerKm: Double
-    get() = if (distanceInKm == 0.0) 0.0 else (durationInSeconds / 60) / distanceInKm
+  fun paceInMinutesPerKm(): Double = if (distanceInKm() == 0.0) 0.0 else (durationInSeconds() / 60) / distanceInKm()
 /*  val googleMapPath: PolylineOptions by lazy {
     PolylineOptions().apply {
       addCoordinates(coordinates)

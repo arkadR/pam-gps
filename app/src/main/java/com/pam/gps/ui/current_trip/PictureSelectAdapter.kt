@@ -23,7 +23,7 @@ class PictureSelectAdapter(
 
   override fun onBindViewHolder(holder: PictureSelectViewHolder, position: Int) {
     val uri = imageUris[position]
-    Timber.d("binding position $position, selected postion = $selectedPosition")
+    Timber.d("binding position $position, selected position = $selectedPosition")
     holder.bind(position == selectedPosition, uri)
   }
 

@@ -15,9 +15,9 @@ class PhotosRepository {
   private val userId by lazyOf(
     FirebaseAuth.getInstance().currentUser?.uid ?: throw RuntimeException("userId not available")
   )
-  private val tripsRepository = TripsRepository()
+//  private val tripsRepository = TripsRepository()
 
-  suspend fun addPhotoToTrip(currentTrip: CurrentTrip, photoUri: Uri) {
+  suspend fun addPhotoToTrip(currentTrip: CurrentTrip, photoUri: Uri): String {
     if (currentTrip.tripDetails == null) throw RuntimeException("Trip details null for $currentTrip")
     val path = "${userId}/${currentTrip.tripDetails.id}/${photoUri.lastPathSegment}"
     Timber.d("upload path is $path")
@@ -26,6 +26,7 @@ class PhotosRepository {
     } catch (e: Exception) {
       Timber.e(e)
     } //TODO[ME] Recover
-    tripsRepository.addPhotoToCurrentTrip(arrayOf(path))
+    return path
+//    tripsRepository.addPhotoToCurrentTrip(arrayOf(path))
   }
 }

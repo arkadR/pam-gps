@@ -89,7 +89,8 @@ class MapFragment : Fragment() {
     mClusterManager.setAnimation(true)
     //TODO[AR] Change markers to photos, draw path from coords
     GlobalScope.launch {
-      mapViewModel.mapMarkers.collect { marker ->
+      val markers = mapViewModel.mapMarkers
+      markers.collect { marker ->
         marker.prepareMarker()
         mClusterManager.addItem(marker)
         launch(Dispatchers.Main) { mClusterManager.cluster() }

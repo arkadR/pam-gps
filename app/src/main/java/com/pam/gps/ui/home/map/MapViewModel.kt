@@ -17,7 +17,7 @@ class MapViewModel : ViewModel() {
     allTripDetails
       .transform { allDetails ->
         allDetails.flatMap { details -> details.pictures }
-          .map { pictureUri -> emit(LocalPicture.fromUri(pictureUri)) }
+          .map { picture -> emit(LocalPicture.fromStorageRef(picture.storageRef!!)) }
       }
 
   val mapMarkers =

@@ -12,7 +12,7 @@ class PhotoLocationCache: KoinComponent {
   private val locationSharedPrefs: SharedPreferences by inject(named("local_photo_cache_prefs"))
 
   private val localPhotosCache: LocalPhotoCache by inject()
-  
+
   suspend fun getLocationByRef(ref: String): LatLng? {
     if (isCached(ref))
       return getLocation(ref)
@@ -41,8 +41,8 @@ class PhotoLocationCache: KoinComponent {
     if (!isCached(photoRef))
       throw IllegalArgumentException("Location with this reference is not cached!")
 
-    val lat = locationSharedPrefs.getString("${photoRef}_lat", null)!!
-    val lng = locationSharedPrefs.getString("${photoRef}_lng", null)!!
+    val lat = locationSharedPrefs.getFloat("${photoRef}_lat", 0f)
+    val lng = locationSharedPrefs.getFloat("${photoRef}_lng", 0f)
     return LatLng(lat.toDouble(), lng.toDouble())
   }
 

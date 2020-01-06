@@ -1,5 +1,6 @@
 package com.pam.gps.repositories
 
+import android.net.Uri
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
@@ -10,7 +11,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.pam.gps.extensions.asFlow
 import com.pam.gps.model.*
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
@@ -24,6 +25,8 @@ open class TripsRepository {
   private val userId by lazyOf(
     FirebaseAuth.getInstance().currentUser?.uid ?: throw RuntimeException("userId not available")
   )
+
+  private val photosRepository = PhotosRepository()
 
   companion object {
     const val tripsDetails = "trips_details"
@@ -120,6 +123,7 @@ open class TripsRepository {
     val tripDetailsReference = dbTripsDetailsCollection.document(tripDetails.id)
 
     db.runBatch { batch ->
+      //TODO[AR]: Remove photos from storage?
       batch.delete(tripDetailsReference)
       batch.delete(dbCurrentUserCurrentTripReference)
     }.await()
@@ -136,12 +140,12 @@ open class TripsRepository {
     addArrayDataToCurrentTripDetails("coordinates", coordinates)
   }
 
-  suspend fun addPhotoToTripDetails(tripDetails: TripDetails, photoPaths: Array<String>) {
-    db.collection(tripsDetails)
-      .document(tripDetails.id)
-      .update(tripPictures, FieldValue.arrayUnion(*photoPaths))
-      .await()
-  }
+//  suspend fun addPhotoToTripDetails(tripDetails: TripDetails, photoPaths: Array<String>) {
+//    db.collection(tripsDetails)
+//      .document(tripDetails.id)
+//      .update(tripPictures, FieldValue.arrayUnion(*photoPaths))
+//      .await()
+//  }
 
   private suspend fun <T> addArrayDataToCurrentTripDetails(field: String, data: Array<T>) {
     dbCurrentUserCurrentTripReference
@@ -149,8 +153,19 @@ open class TripsRepository {
       .await()
   }
 
-  suspend fun addPhotoToCurrentTrip(photoPaths: Array<String>) {
-    addArrayDataToCurrentTripDetails("pictures", photoPaths)
+//  suspend fun addPhotoToCurrentTrip(photoPaths: Array<String>) {
+//    addArrayDataToCurrentTripDetails("pictures", photoPaths)
+//  }
+
+
+  suspend fun addPicturesToCurrentTrip(pictures: Array<Picture>) {
+    val currentTrip = getCurrentTripSnapshot()
+      ?: throw RuntimeException("Attempting to post photo without current trip present")
+    pictures.forEach { pic ->
+      val ref = photosRepository.addPhotoToTrip(currentTrip, Uri.parse(pic.uri))
+      pic.storageRef = ref
+    }
+    addArrayDataToCurrentTripDetails("pictures", pictures)
   }
 
   private val dbCurrentUserTripsCollection: CollectionReference

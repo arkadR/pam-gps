@@ -46,12 +46,12 @@ class FinishTripFragment : Fragment() {
       }
     }
 
-    viewModel.currentTrip.observe(viewLifecycleOwner) {
-      if (it?.tripDetails?.pictures.isNullOrEmpty()) {
-        picture_no_data_image.visibility = View.VISIBLE
+    viewModel.currentTrip.observe(viewLifecycleOwner) { currentTrip ->
+      if (currentTrip?.tripDetails?.pictures.isNullOrEmpty()) {
+//        picture_no_data_image.visibility = View.VISIBLE
         return@observe
       }
-      picturesAdapter.setData(it!!.tripDetails!!.pictures)
+      picturesAdapter.setData(currentTrip!!.tripDetails!!.pictures.map { pic -> pic.storageRef!! })
     }
 
     viewModel.requestCurrentTripUpdate()

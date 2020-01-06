@@ -18,7 +18,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/CardView.Light"
+        style="@style/Widget.MaterialComponents.CardView"
         android:foreground="@drawable/selectable_item_background"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:onClick="@{(view) -> holder.navigateToTripDetails(view, trip)}"

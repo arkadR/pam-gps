@@ -37,10 +37,10 @@ class TripDetailsFragment : Fragment() {
     viewModel.tripDetails.observe(viewLifecycleOwner, Observer {
       Timber.d("tripdetails = $it")
       it?.let {
-        picturesAdapter.setData(it.pictures)
-        txtTripDistance.text = it.distanceInKm.withDecimalPlaces(2) + " km"
-        txtTripDuration.text = (it.durationInSeconds).toString() + "sec"
-        txtTripPace.text = it.paceInMinutesPerKm.withDecimalPlaces(2) + "min/km"
+        picturesAdapter.setData(it.pictures.map { pic -> pic.storageRef!! })
+        txtTripDistance.text = it.distanceInKm().withDecimalPlaces(2) + " km"
+        txtTripDuration.text = (it.durationInSeconds()).toString() + "sec"
+        txtTripPace.text = it.paceInMinutesPerKm().withDecimalPlaces(2) + "min/km"
       }
     })
   }

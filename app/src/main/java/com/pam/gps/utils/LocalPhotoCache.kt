@@ -17,14 +17,18 @@ class LocalPhotoCache: KoinComponent {
   private val photosSharedPrefs: SharedPreferences by inject(named("local_photo_cache_prefs"))
 
   suspend fun getLocalPathByRef(ref: String): String {
-    if (isCached(ref))
-      return getLocalPath(ref)
+    if (isCached(ref)) {
+      val localPath = getLocalPath(ref)
+      if (!File(localPath).exists())
+        removeFromCache(ref)
+      else
+        return localPath
+    }
 
     val localPath = downloadFromFirebase(ref)
     cachePhoto(ref, localPath)
     return localPath
   }
-
 
   private fun isCached(photoRef: String): Boolean {
     return photosSharedPrefs.contains(photoRef)
@@ -43,6 +47,13 @@ class LocalPhotoCache: KoinComponent {
 
     with(photosSharedPrefs.edit()) {
       putString(photoRef, localPath)
+      commit()
+    }
+  }
+
+  private fun removeFromCache(photoRef: String) {
+    with(photosSharedPrefs.edit()) {
+      remove(photoRef)
       commit()
     }
   }
