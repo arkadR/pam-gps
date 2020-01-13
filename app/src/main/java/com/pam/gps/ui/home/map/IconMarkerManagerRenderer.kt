@@ -20,10 +20,20 @@ class IconMarkerManagerRenderer(context: Context, googleMap: GoogleMap, clusterM
     iconGenerator.setContentView(imageView)
     imageView.layoutParams.height = 100
     imageView.layoutParams.width = 100
+
+    setOnClusterItemInfoWindowClickListener {
+      ClusterManager.OnClusterItemInfoWindowClickListener<MapMarker> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+      }
+    }
   }
 
   override fun onBeforeClusterItemRendered(item: MapMarker, markerOptions: MarkerOptions) {
     val icon = BitmapFactory.decodeFileWithDimensions(item.localPath!!, 64, 64)
-    markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(item.title) //Don't know what the title changes
+    markerOptions
+      .icon(BitmapDescriptorFactory.fromBitmap(icon))
+      .position(item.position)
+      .anchor(iconGenerator.anchorU, iconGenerator.anchorV)
+      .title(item.title) //Don't know what the title changes
   }
 }

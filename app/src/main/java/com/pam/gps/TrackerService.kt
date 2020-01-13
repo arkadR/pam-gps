@@ -51,10 +51,10 @@ class TrackerService : Service() {
   private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
   private val mLocationRequest = LocationRequest.create().apply {
-    priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
-    maxWaitTime = 60 * 60 * 1000
-    fastestInterval = 30 * 1000
-    interval = 5 * 60 * 1000
+    priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    maxWaitTime = 1 * 60 * 1000
+    fastestInterval = 10 * 1000
+    interval = 1 * 60 * 1000
   }
   private lateinit var mLocationCallback: LocationCallback
 
@@ -120,10 +120,17 @@ class TrackerService : Service() {
         startLocationUpdates()
       }
       STOP_SERVICE_CODE -> {
-        mFusedLocationClient.flushLocations()
-        mFusedLocationClient.removeLocationUpdates(mLocationCallback)
-        stopForeground(true)
-        stopSelf()
+        mFusedLocationClient
+          .flushLocations()
+          .addOnSuccessListener {
+            mFusedLocationClient.removeLocationUpdates(mLocationCallback)
+            stopForeground(true)
+            stopSelf()
+          }
+          .addOnFailureListener {
+            Timber.d(it)
+          }
+
       }
     }
 

@@ -13,11 +13,15 @@ import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_main.*
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
   private val mRequiredPermissions = arrayOf(
+    android.Manifest.permission.ACCESS_COARSE_LOCATION,
     android.Manifest.permission.ACCESS_FINE_LOCATION,
+    android.Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+    android.Manifest.permission.FOREGROUND_SERVICE,
     android.Manifest.permission.READ_EXTERNAL_STORAGE,
     android.Manifest.permission.ACCESS_MEDIA_LOCATION
   )
@@ -93,12 +97,17 @@ class MainActivity : AppCompatActivity() {
   ) {
     when (requestCode) {
       cRequestPermissionsCode -> {
-        if ((grantResults.isEmpty() || grantResults[0] != PackageManager.PERMISSION_GRANTED))
-        //TODO[AR]: Fix this shit, show a screen with info
-          requestPermissions()
-        return
-      }
-      else -> {
+        if (grantResults.isEmpty()) {
+          //TODO[AR]: Think what to put here
+          Timber.d("No permission grant response!")
+          return
+        }
+        grantResults.forEachIndexed { i, res ->
+          if (res != PackageManager.PERMISSION_GRANTED) {
+            Timber.d("Permission for ${permissions[i]} was not granted")
+            return
+          }
+        }
       }
     }
   }
