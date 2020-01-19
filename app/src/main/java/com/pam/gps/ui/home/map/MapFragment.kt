@@ -14,6 +14,7 @@ import com.google.android.gms.maps.MapView
 import com.google.maps.android.clustering.ClusterManager
 import com.pam.gps.R
 import com.pam.gps.extensions.addPath
+import com.pam.gps.extensions.centerOnPath
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
@@ -100,6 +101,7 @@ class MapFragment : Fragment() {
       for (path in pathList) {
         googleMap.addPath(path)
       }
+      googleMap.centerOnPath(pathList.flatten());
     })
   }
 }

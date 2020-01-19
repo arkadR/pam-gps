@@ -1,7 +1,8 @@
 package com.pam.gps.utils
 
 import android.content.SharedPreferences
-import android.media.ExifInterface
+import androidx.exifinterface.media.ExifInterface
+//import android.media.ExifInterface
 import com.google.android.gms.maps.model.LatLng
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -52,7 +53,7 @@ class PhotoLocationCache: KoinComponent {
 
     with(locationSharedPrefs.edit()) {
       putFloat("${photoRef}_lat", location.latitude.toFloat())
-      putFloat("${photoRef}_lng", location.latitude.toFloat())
+      putFloat("${photoRef}_lng", location.longitude.toFloat())
       commit()
     }
   }
