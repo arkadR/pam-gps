@@ -4,10 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import com.pam.gps.model.LocalPicture
 import com.pam.gps.repositories.TripsRepository
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.transform
 
-@InternalCoroutinesApi
 class MapViewModel : ViewModel() {
 
   private val allTripDetails = TripsRepository()

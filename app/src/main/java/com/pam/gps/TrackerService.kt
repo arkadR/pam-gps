@@ -20,16 +20,19 @@ import com.pam.gps.model.Picture
 import com.pam.gps.repositories.LocalPhotosRepository
 import com.pam.gps.repositories.PhotosRepository
 import com.pam.gps.repositories.TripsRepository
+import com.pam.gps.utils.Observable
 import kotlinx.coroutines.*
 import timber.log.Timber
+import java.util.*
+import kotlin.properties.Delegates
 
 class TrackerService : Service() {
 
   companion object {
     const val STOP_SERVICE_CODE = "STOP_SERVICE"
     const val START_SERVICE_CODE = "START_SERVICE"
-    private var isCreated = false
-    val isRunning get() = isCreated
+    var isRunning = Observable(false)
+
 
     fun start(context: Context) {
       val startIntent = Intent(context, TrackerService::class.java)
@@ -82,7 +85,7 @@ class TrackerService : Service() {
 
   override fun onCreate() {
     super.onCreate()
-    isCreated = true
+    isRunning.value = true
     mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     mLocationCallback = object : LocationCallback() {
       override fun onLocationResult(locationResult: LocationResult?) {
@@ -139,7 +142,7 @@ class TrackerService : Service() {
 
   override fun onDestroy() {
     super.onDestroy()
-    isCreated = false
+    isRunning.value = false
   }
 
   private fun createNotification(): Notification {

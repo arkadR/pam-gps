@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
+import com.pam.gps.MainActivity
 import com.pam.gps.R
 import com.pam.gps.TrackerService
 import kotlinx.android.synthetic.main.activity_main.*
@@ -32,23 +33,6 @@ class CurrentTripFragment : Fragment() {
       FirebaseAuth.getInstance().signOut()
       findNavController().navigate(R.id.action_navigation_trip_to_navigation_login)
     }
-    setupCurrentTripFab(requireActivity().fab)
-  }
-
-  //TODO[ME] clean up this mess
-  private fun setupCurrentTripFab(
-    fab: FloatingActionButton
-  ) {
-    fab.setImageResource(if (TrackerService.isRunning) R.drawable.ic_stop_tracker else R.drawable.ic_start_tracker)
-
-    fab.setOnClickListener {
-      if (TrackerService.isRunning) {
-        TrackerService.stop(requireContext())
-        findNavController().navigate(R.id.action_navigation_trip_to_finishTripFragment)
-      } else {
-        TrackerService.start(requireContext())
-        fab.setImageResource(R.drawable.ic_stop_tracker)
-      }
-    }
+    (requireActivity() as MainActivity).setupFab()
   }
 }

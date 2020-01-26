@@ -1,6 +1,5 @@
 package com.pam.gps.model
 
-import android.net.Uri
 import com.google.android.gms.maps.model.LatLng
 import com.pam.gps.utils.LocalPhotoCache
 import org.koin.core.KoinComponent

@@ -8,10 +8,15 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavDestination
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.firebase.auth.FirebaseAuth
+import com.pam.gps.ui.current_trip.CurrentTripFragment
+import com.pam.gps.ui.home.HomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 
@@ -43,7 +48,7 @@ class MainActivity : AppCompatActivity() {
       navController.navigate(R.id.navigation_current_trip)
     }
 
-    findNavController(R.id.nav_host_fragment).addOnDestinationChangedListener { _, destination, _ ->
+    navController.addOnDestinationChangedListener { _, destination, _ ->
       when (destination.id) {
         R.id.navigation_home -> {
           showBottomAppBar()
@@ -60,6 +65,7 @@ class MainActivity : AppCompatActivity() {
 
     createNotificationChannel()
     requestPermissions()
+    setupFab()
   }
 
   private fun hideBottomAppBar() {
@@ -70,6 +76,44 @@ class MainActivity : AppCompatActivity() {
   private fun showBottomAppBar() {
     bottom_appbar.performShow()
     fab.visibility = View.VISIBLE
+  }
+
+  fun setupFab() {
+    val currentDest = findNavController(R.id.nav_host_fragment).currentDestination?.label.toString()
+    val isRunning = TrackerService.isRunning
+    fab.setImageResource(getFabIcon(isRunning.value, currentDest))
+
+    isRunning.subscribe { value ->
+      val currentDest = findNavController(R.id.nav_host_fragment).currentDestination?.label.toString()
+      fab.setImageResource(getFabIcon(value, currentDest))
+    }
+
+    fab.setOnClickListener {
+      val currentDest = findNavController(R.id.nav_host_fragment).currentDestination?.label
+      if (isRunning.value) {
+        if (currentDest == "Home")
+          findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_home_to_navigation_current_trip)
+        else {
+          TrackerService.stop(this)
+          findNavController(R.id.nav_host_fragment).navigate(R.id.action_navigation_trip_to_finishTripFragment)
+        }
+      }
+      else {
+        TrackerService.start(this)
+        findNavController(R.id.nav_host_fragment).navigate(R.id.action_global_navigation_current_trip)
+      }
+    }
+  }
+
+  private fun getFabIcon(isServiceRunning: Boolean, currentDes: String?) : Int {
+    return if (isServiceRunning) {
+      when (currentDes) {
+        resources.getString(R.string.title_home) -> R.drawable.ic_trip_pace
+        resources.getString(R.string.title_trip) -> R.drawable.ic_stop_tracker
+        else -> R.drawable.ic_stop_tracker
+      }
+    }
+    else R.drawable.ic_start_tracker
   }
 
 

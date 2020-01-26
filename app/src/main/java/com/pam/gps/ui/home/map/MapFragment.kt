@@ -19,7 +19,6 @@ import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
 
-@InternalCoroutinesApi
 class MapFragment : Fragment() {
 
   private val mapViewModel by viewModels<MapViewModel>()
