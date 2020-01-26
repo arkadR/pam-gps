@@ -11,7 +11,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.pam.gps.extensions.asFlow
 import com.pam.gps.model.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flowOn
@@ -95,11 +95,6 @@ open class TripsRepository {
       throw RuntimeException("trip = $trip, tripDetails = $tripDetails while finishing trip")
     val tripDetailsReference = dbTripsDetailsCollection.document(tripDetails.id)
 
-    //TODO[AR] This was done because saving a trip without any coords fucks up the rest of the code, consider this again
-    if (tripDetails.coordinates.size < 2) {
-      discardTrip()
-      return
-    }
     val tripReference = dbCurrentUserTripsCollection.document()
     val tripWithIds = trip.copy(
       id = tripReference.id,
@@ -132,7 +127,7 @@ open class TripsRepository {
   fun getAllTripsDetails(): Flow<List<TripDetails>> {
     return dbTripsDetailsCollection
       .asFlow()
-      .map {query -> query?.toObjects(TripDetails::class.java)}
+      .map { query -> query?.toObjects(TripDetails::class.java) }
       .filterNotNull()
   }
 

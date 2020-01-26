@@ -18,6 +18,8 @@ fun GoogleMap.addPath(coordinates: List<Coordinate>) {
 }
 
 fun GoogleMap.centerOnPath(coordinates: List<Coordinate>) {
+  if (coordinates.isEmpty()) return
+  if (coordinates.size == 1) centerOnPoint(coordinates.single().asLatLng())
   val latLngBounds = LatLngBounds.Builder().apply {
     coordinates.forEach { coordinate -> this.include(coordinate.asLatLng()) }
   }.build()

@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.callbackFlow
 fun Query.asFlow(): Flow<QuerySnapshot?> {
   return callbackFlow {
     val onSnapShotListener = EventListener<QuerySnapshot> { snapshot, exception ->
-      if (exception != null) cancel(CancellationException("FireStore Error", exception))
+      if (exception != null) cancel(CancellationException("QUERY: $this@asFlow", exception))
       offer(snapshot)
     }
     val registration = this@asFlow.addSnapshotListener(onSnapShotListener)

@@ -4,15 +4,20 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.firebase.auth.FirebaseAuth
+import com.pam.gps.model.AuthProvider
 import com.pam.gps.utils.SingleLiveEvent
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import kotlinx.coroutines.tasks.await
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class SignInViewModel : ViewModel() {
+
+class SignInViewModel : ViewModel(), KoinComponent {
+
+  private val authProvider: AuthProvider by inject()
 
   val authStatus: SingleLiveEvent<Unit> = SingleLiveEvent()
   private val _loading = MutableLiveData<Boolean>(false)
@@ -21,8 +26,7 @@ class SignInViewModel : ViewModel() {
   fun authenticate(username: String, password: String, handler: CoroutineExceptionHandler) {
     _loading.value = true
     (viewModelScope + handlerDecorator(handler) + Dispatchers.Main).launch {
-      FirebaseAuth
-        .getInstance()
+      authProvider
         .signInWithEmailAndPassword(username, password)
         .await()
       authStatus.call()

@@ -1,7 +1,9 @@
 package com.pam.gps.uiautomator
 
 
-import androidx.test.uiautomator.*
+import androidx.test.uiautomator.By
+import androidx.test.uiautomator.UiObject
+import androidx.test.uiautomator.UiSelector
 import com.pam.gps.TrackerService
 import org.junit.Assert
 import org.junit.Test
@@ -19,7 +21,7 @@ class UITests : UIAutomatorTestBase() {
     fab.click()
 
     //Assert
-    Assert.assertTrue(TrackerService.isRunning)
+    Assert.assertTrue(TrackerService.isRunning.value)
   }
 
   @Test

@@ -9,23 +9,19 @@ data class Coordinate(val geoPoint: GeoPoint? = null, val timestamp: Timestamp? 
 
   constructor(location: Location) : this(
     GeoPoint(location.latitude, location.longitude),
-    Timestamp(location.time/1000, 0)
+    Timestamp(location.time / 1000, 0)
   )
 
-  fun asLatLng(): LatLng? {
-    return if (geoPoint != null && timestamp != null)
-        LatLng(geoPoint.latitude, geoPoint.longitude)
-      else
-        null
+  fun asLatLng(): LatLng {
+    if (geoPoint == null) throw IllegalStateException("Invalid call to asLatLng")
+    return LatLng(geoPoint.latitude, geoPoint.longitude)
   }
 
-  fun asLocation(): Location? {
-    return if (geoPoint != null)
-      Location("").apply {
-        this.latitude = geoPoint.latitude
-        this.longitude = geoPoint.longitude
-      }
-    else
-      null
+  fun asLocation(): Location {
+    if (geoPoint == null) throw IllegalStateException("Invalid call to asLatLng")
+    return Location("").apply {
+      this.latitude = geoPoint.latitude
+      this.longitude = geoPoint.longitude
+    }
   }
 }

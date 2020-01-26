@@ -6,14 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.pam.gps.MainActivity
 import com.pam.gps.R
 import com.pam.gps.TrackerService
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_current_trip.*
+import kotlinx.coroutines.*
 
 class CurrentTripFragment : Fragment() {
 
@@ -30,8 +30,19 @@ class CurrentTripFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     sign_out_button.setOnClickListener {
-      FirebaseAuth.getInstance().signOut()
-      findNavController().navigate(R.id.action_navigation_trip_to_navigation_login)
+      (lifecycleScope + Dispatchers.IO).launch {
+        TrackerService.stop(requireContext())
+        while (isActive) {
+          if (!TrackerService.isRunning.value) {
+            FirebaseAuth.getInstance().signOut()
+            withContext(Dispatchers.Main) {
+              findNavController().navigate(R.id.action_navigation_trip_to_navigation_login)
+            }
+            cancel()
+          }
+        }
+      }
+
     }
     (requireActivity() as MainActivity).setupFab()
   }
