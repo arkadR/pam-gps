@@ -1,8 +1,5 @@
-package com.pam.gps.ui.current_trip
+package com.pam.gps.ui.finish_trip
 
-import android.app.AlertDialog
-import android.content.DialogInterface
-import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import androidx.core.widget.addTextChangedListener
@@ -21,7 +18,7 @@ import kotlinx.android.synthetic.main.fragment_finish_trip.view.*
 
 class FinishTripFragment : Fragment() {
 
-  private val viewModel by viewModels<CurrentTripViewModel>()
+  private val viewModel by viewModels<FinishTripViewModel>()
   private lateinit var picturesAdapter: PictureSelectAdapter
 
   private val saveButton: MenuItem

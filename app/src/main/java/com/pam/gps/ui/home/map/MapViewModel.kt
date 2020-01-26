@@ -2,6 +2,7 @@ package com.pam.gps.ui.home.map
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.pam.gps.model.LocalPicture
 import com.pam.gps.repositories.TripsRepository
 import kotlinx.coroutines.flow.transform
@@ -26,6 +27,6 @@ class MapViewModel : ViewModel() {
       .transform { allDetails ->
         emit(allDetails.map { details -> details.coordinates })
       }
-      .asLiveData()
+      .asLiveData(viewModelScope.coroutineContext)
 
 }

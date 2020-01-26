@@ -6,6 +6,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.FirebaseFirestoreException
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -80,10 +81,12 @@ open class TripsRepository {
     )
     val currentTrip = CurrentTrip(userId, trip, tripDetails)
 
-    db.runBatch { batch ->
-      batch.set(currentTripRef, currentTrip)
-      batch.set(tripDetailsRef, tripDetails)
-    }.await()
+    val batch = Firebase.firestore.batch()
+
+    batch.set(currentTripRef, currentTrip)
+    batch.set(tripDetailsRef, tripDetails)
+
+    batch.commit().await()
     Timber.d("creating trip $currentTrip")
     return currentTrip
   }
@@ -102,11 +105,15 @@ open class TripsRepository {
       title = title,
       picture = thumbnailPath
     )
-    db.runBatch { batch ->
-      batch.set(tripReference, tripWithIds)
-      batch.set(tripDetailsReference, tripDetails.copy(title = title))
-      batch.delete(dbCurrentUserCurrentTripReference)
-    }.await()
+    try {
+      db.runBatch { batch ->
+        batch.set(tripReference, tripWithIds)
+        batch.set(tripDetailsReference, tripDetails.copy(title = title))
+        batch.delete(dbCurrentUserCurrentTripReference)
+      }.await()
+    } catch (ex: FirebaseFirestoreException) {
+      Timber.e(ex)
+    }
   }
 
 

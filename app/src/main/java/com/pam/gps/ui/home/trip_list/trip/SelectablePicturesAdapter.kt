@@ -7,7 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.pam.gps.R
 import com.pam.gps.ui.binding_adapters.bindStorageUri
 
-class PicturesAdapter : RecyclerView.Adapter<PicturesAdapter.PictureViewHolder>() {
+class SelectablePicturesAdapter :
+  RecyclerView.Adapter<SelectablePicturesAdapter.PictureViewHolder>() {
   private var data: List<String> = emptyList()
 
   class PictureViewHolder(private val imageView: ImageView) : RecyclerView.ViewHolder(imageView) {
@@ -19,7 +20,7 @@ class PicturesAdapter : RecyclerView.Adapter<PicturesAdapter.PictureViewHolder>(
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureViewHolder {
     val imageView = LayoutInflater
       .from(parent.context)
-      .inflate(R.layout.picture, parent, false)
+      .inflate(R.layout.selectable_picture, parent, false)
     return PictureViewHolder(imageView as ImageView)
   }
 

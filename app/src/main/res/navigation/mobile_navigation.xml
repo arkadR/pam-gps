@@ -57,7 +57,7 @@
     </fragment>
     <fragment
         android:id="@+id/finishTripFragment"
-        android:name="com.pam.gps.ui.current_trip.FinishTripFragment"
+        android:name="com.pam.gps.ui.finish_trip.FinishTripFragment"
         android:label="@string/title_trip_finish"
         tools:layout="@layout/fragment_finish_trip">
         <action

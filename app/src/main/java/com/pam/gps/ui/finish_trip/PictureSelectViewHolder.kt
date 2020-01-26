@@ -1,4 +1,4 @@
-package com.pam.gps.ui.current_trip
+package com.pam.gps.ui.finish_trip
 
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView

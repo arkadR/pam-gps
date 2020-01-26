@@ -15,22 +15,19 @@ data class TripDetails(
   fun distanceInKm(): Double {
     if (coordinates.size < 2)
       return 0.0
-//      throw Exception("Trip details with less than 2 coords should not exist.")
-    //TODO[ME] And if trip was just created? It crashes if you try to watch it in ViewModel
 
     val locations = coordinates
       .sortedBy { coord -> coord.timestamp }
       .map { coord -> coord.asLocation() }
 
     return (locations.dropLast(1) zip locations.drop(1))
-      .fold(0.0, {acc, (prev, curr) -> acc + prev!!.distanceTo(curr) } ) / 1000
+      .fold(0.0, { acc, (prev, curr) -> acc + prev.distanceTo(curr) }) / 1000
   }
 
   fun durationInSeconds(): Long {
     if (coordinates.size < 2)
       return 0
-//      throw Exception("Trip details with less than 2 coords should not exist.")
-//TODO[ME] Same thing
+
     return coordinates
       .map {coord -> coord.timestamp}
       .sortedBy { timestamp -> timestamp }

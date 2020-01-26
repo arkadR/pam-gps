@@ -1,4 +1,4 @@
-package com.pam.gps.ui.current_trip
+package com.pam.gps.ui.finish_trip
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -15,7 +15,7 @@ class PictureSelectAdapter(
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureSelectViewHolder {
     val inflater = LayoutInflater.from(parent.context)
-    val view = inflater.inflate(R.layout.picture, parent, false) as ImageView
+    val view = inflater.inflate(R.layout.selectable_picture, parent, false) as ImageView
     return PictureSelectViewHolder(view)
   }
 

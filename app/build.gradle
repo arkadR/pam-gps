@@ -38,7 +38,7 @@ android {
         jvmTarget = "1.8"
     }
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
-        kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi"]
+        kotlinOptions.freeCompilerArgs += ["-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi", "-Xuse-experimental=kotlinx.coroutines.InternalCoroutinesApi"]
     }
     dataBinding {
         enabled = true

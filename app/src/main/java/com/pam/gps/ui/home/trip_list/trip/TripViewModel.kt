@@ -10,7 +10,7 @@ class TripViewModel : ViewModel() {
   val selectedTrip: MutableLiveData<Trip?> = MutableLiveData()
   val tripDetails: LiveData<TripDetails?> = selectedTrip.switchMap { trip ->
     trip?.let {
-      tripsRepository.getTripDetailsForTrip(it).asLiveData()
+      tripsRepository.getTripDetailsForTrip(it).asLiveData(viewModelScope.coroutineContext)
     } ?: MutableLiveData()
   }
 }

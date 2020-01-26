@@ -17,7 +17,7 @@ import timber.log.Timber
 
 class TripDetailsFragment : Fragment() {
   private val viewModel by activityViewModels<TripViewModel>()
-  private val picturesAdapter = PicturesAdapter()
+  private val picturesAdapter = SelectablePicturesAdapter()
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -38,9 +38,9 @@ class TripDetailsFragment : Fragment() {
       Timber.d("tripdetails = $it")
       it?.let {
         picturesAdapter.setData(it.pictures.map { pic -> pic.storageRef!! })
-        txtTripDistance.text = it.distanceInKm().withDecimalPlaces(2) + " km"
-        txtTripDuration.text = (it.durationInSeconds()).toString() + "sec"
-        txtTripPace.text = it.paceInMinutesPerKm().withDecimalPlaces(2) + "min/km"
+        distance_text.text = it.distanceInKm().withDecimalPlaces(2) + " km"
+        duration_text.text = (it.durationInSeconds()).toString() + "sec"
+        pace_text.text = it.paceInMinutesPerKm().withDecimalPlaces(2) + "min/km"
       }
     })
   }

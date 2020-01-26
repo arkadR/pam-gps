@@ -27,7 +27,7 @@ fun GoogleMap.centerOnPath(coordinates: List<Coordinate>) {
   this.moveCamera(cameraUpdate)
 }
 
-fun GoogleMap.centerOnPoint(point: LatLng) {
+private fun GoogleMap.centerOnPoint(point: LatLng) {
   val cameraUpdate = CameraUpdateFactory.newLatLng(point)
   this.moveCamera(cameraUpdate)
 }
