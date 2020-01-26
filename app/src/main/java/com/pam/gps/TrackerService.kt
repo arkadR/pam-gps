@@ -57,7 +57,7 @@ class TrackerService : Service() {
     priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     maxWaitTime = 1 * 60 * 1000
     fastestInterval = 10 * 1000
-    interval = 1 * 60 * 1000
+    interval = 1 * 10 * 1000
   }
   private lateinit var mLocationCallback: LocationCallback
 
