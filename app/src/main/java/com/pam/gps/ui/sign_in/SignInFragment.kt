@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.pam.gps.MainActivity
 import com.pam.gps.R
 import com.pam.gps.extensions.setOnClickListenerRequirements
 import com.pam.gps.extensions.validateEmail
@@ -69,6 +70,8 @@ class SignInFragment : Fragment() {
         )
       }
     )
+
+    (requireActivity() as MainActivity).hideBottomAppBar()
   }
 
   private fun signInExceptionHandler(): CoroutineExceptionHandler {
