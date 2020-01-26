@@ -5,7 +5,10 @@ import android.app.NotificationManager
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -16,6 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.firebase.auth.FirebaseAuth
 import com.pam.gps.ui.current_trip.CurrentTripFragment
+import com.pam.gps.ui.home.BottomNavigationDrawerFragment
 import com.pam.gps.ui.home.HomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -54,26 +58,42 @@ class MainActivity : AppCompatActivity() {
           showBottomAppBar()
           bottom_appbar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_END
         }
-
         R.id.navigation_current_trip -> {
           showBottomAppBar()
           bottom_appbar.fabAlignmentMode = BottomAppBar.FAB_ALIGNMENT_MODE_CENTER
         }
+        R.id.navigation_login -> {
+          hideBottomAppBar()
+        }
         else -> hideBottomAppBar()
       }
     }
+
+    setSupportActionBar(bottom_appbar)
 
     createNotificationChannel()
     requestPermissions()
     setupFab()
   }
 
-  private fun hideBottomAppBar() {
+  override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+    when (item!!.itemId) {
+      android.R.id.home -> {
+        val bottomNavDrawerFragment = BottomNavigationDrawerFragment()
+        bottomNavDrawerFragment.show(supportFragmentManager, bottomNavDrawerFragment.tag)
+      }
+    }
+    return true
+  }
+
+  fun hideBottomAppBar() {
     bottom_appbar.performHide()
+    bottom_appbar.visibility = View.GONE
     fab.visibility = View.GONE
   }
 
   private fun showBottomAppBar() {
+    bottom_appbar.visibility = View.VISIBLE
     bottom_appbar.performShow()
     fab.visibility = View.VISIBLE
   }
