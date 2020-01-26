@@ -12,11 +12,17 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.pam.gps.R
 import kotlinx.android.synthetic.main.fragment_bottomsheet.*
+import kotlinx.android.synthetic.main.fragment_bottomsheet.view.*
+import kotlinx.android.synthetic.main.nav_header.*
+import kotlinx.android.synthetic.main.nav_header.view.*
 
 class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    return inflater.inflate(R.layout.fragment_bottomsheet, container, false)
+    val view = inflater.inflate(R.layout.fragment_bottomsheet, container, false)
+    view.navigation_view.getHeaderView(0).nav_header_username.text =
+      FirebaseAuth.getInstance().currentUser!!.email
+    return view
   }
 
   override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -34,12 +40,5 @@ class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
       // For example, swap UI fragments here
       true
     }
-  }
-
-  // This is an extension method for easy Toast call
-  fun Context.toast(message: CharSequence) {
-    val toast = Toast.makeText(this, message, Toast.LENGTH_SHORT)
-    toast.setGravity(Gravity.BOTTOM, 0, 600)
-    toast.show()
   }
 }
