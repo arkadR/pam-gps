@@ -52,8 +52,8 @@
         android:label="@string/title_trip_details"
         tools:layout="@layout/fragment_trip_main">
         <argument
-            android:name="trip"
-            app:argType="com.pam.gps.model.Trip" />
+            android:name="tripDetailsId"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/finishTripFragment"

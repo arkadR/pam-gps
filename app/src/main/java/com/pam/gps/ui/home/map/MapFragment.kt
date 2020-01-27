@@ -20,6 +20,7 @@ import com.pam.gps.ui.home.HomeFragmentDirections
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 class MapFragment : Fragment() {
 
@@ -92,10 +93,12 @@ class MapFragment : Fragment() {
   private fun setUpClusterManager(googleMap: GoogleMap) {
     mClusterManager = ClusterManager(this.context, googleMap)
     mClusterManager.renderer = IconMarkerManagerRenderer(
-      requireContext(), googleMap, mClusterManager, ::onItemClicked
+      requireContext(), googleMap, mClusterManager
     )
+    mClusterManager.setOnClusterItemInfoWindowClickListener { marker -> onItemClicked(marker) }
     googleMap.setOnCameraIdleListener(mClusterManager)
     googleMap.setOnMarkerClickListener(mClusterManager)
+    googleMap.setOnInfoWindowClickListener { mClusterManager.onInfoWindowClick(it) }
     mClusterManager.setAnimation(true)
     GlobalScope.launch {
       val markers = mapViewModel.mapMarkers

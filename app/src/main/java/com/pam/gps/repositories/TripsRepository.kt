@@ -63,6 +63,13 @@ open class TripsRepository {
       .toObject()
   }
 
+  fun getTripDetailsById(tripDetailsId: String): Flow<TripDetails?> {
+    return dbTripsDetailsCollection
+      .document(tripDetailsId)
+      .asFlow()
+      .map { it?.toObject<TripDetails>() }
+  }
+
   fun getCurrentTrip(): Flow<CurrentTrip?> {
     return dbCurrentUserCurrentTripReference
       .asFlow()

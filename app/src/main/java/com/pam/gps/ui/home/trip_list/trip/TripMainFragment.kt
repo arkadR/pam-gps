@@ -32,7 +32,7 @@ class TripMainFragment : Fragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    viewModel.selectedTrip.value = args.trip
+    viewModel.selectedTrip.value = args.tripDetailsId
 
     mapView = MapView(requireContext())
     mapLoadingJob = lifecycleScope.launchWhenResumed {
@@ -55,8 +55,8 @@ class TripMainFragment : Fragment() {
     toolbar_trip.setNavigationOnClickListener {
       findNavController().navigateUp()
     }
-    viewModel.selectedTrip.observe(viewLifecycleOwner) { trip ->
-      toolbar_trip.title = trip?.title ?: ""
+    viewModel.tripDetails.observe(viewLifecycleOwner) { td ->
+      toolbar_trip.title = td?.title ?: ""
     }
   }
 
@@ -81,5 +81,10 @@ class TripMainFragment : Fragment() {
       })
       mapView.onResume()
     }
+  }
+
+  override fun onPause() {
+    super.onPause()
+    details_map_view.removeView(mapView)
   }
 }
