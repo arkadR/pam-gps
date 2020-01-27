@@ -66,8 +66,12 @@
             app:popUpTo="@id/navigation_home" />
     </fragment>
     <action
+        android:id="@+id/action_global_navigation_login"
+        app:destination="@id/navigation_login"
+        app:popUpTo="@id/navigation_login" />
+
+    <action
         android:id="@+id/action_global_navigation_current_trip"
         app:destination="@id/navigation_current_trip"
         app:popUpTo="@id/navigation_home" />
-
 </navigation>
