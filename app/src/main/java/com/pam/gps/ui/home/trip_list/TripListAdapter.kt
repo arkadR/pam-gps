@@ -24,10 +24,9 @@ class TripListAdapter : RecyclerView.Adapter<TripListAdapter.TripViewHolder>() {
     }
 
     fun navigateToTripDetails(view: View, trip: Trip) {
-      //TODO
       view.findNavController()
         .navigate(
-          HomeFragmentDirections.actionNavigationHomeToTripFragmentMain(trip)
+          HomeFragmentDirections.actionNavigationHomeToTripFragmentMain(trip.details)
         )
     }
   }

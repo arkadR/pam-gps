@@ -54,6 +54,13 @@ open class TripsRepository {
       .map { Timber.d(it.toString()); it?.toObject<TripDetails>() }
   }
 
+  fun getTripDetailsById(tripDetailsId: String): Flow<TripDetails?> {
+    return dbTripsDetailsCollection
+      .document(tripDetailsId)
+      .asFlow()
+      .map { it?.toObject<TripDetails>() }
+  }
+
   fun getCurrentTrip(): Flow<CurrentTrip?> {
     return dbCurrentUserCurrentTripReference
       .asFlow()
