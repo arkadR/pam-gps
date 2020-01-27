@@ -10,7 +10,12 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer
 import com.google.maps.android.ui.IconGenerator
 import com.pam.gps.extensions.BitmapFactory
 
-class IconMarkerManagerRenderer(context: Context, googleMap: GoogleMap, clusterManager: ClusterManager<MapMarker>)
+class IconMarkerManagerRenderer(
+  val context: Context,
+  googleMap: GoogleMap,
+  clusterManager: ClusterManager<MapMarker>,
+  onItemClicked: (MapMarker) -> Unit
+)
   : DefaultClusterRenderer<MapMarker>(context, googleMap, clusterManager) {
 
   private val iconGenerator: IconGenerator = IconGenerator(context)
@@ -23,7 +28,7 @@ class IconMarkerManagerRenderer(context: Context, googleMap: GoogleMap, clusterM
 
     setOnClusterItemInfoWindowClickListener {
       ClusterManager.OnClusterItemInfoWindowClickListener<MapMarker> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        onItemClicked(it)
       }
     }
   }

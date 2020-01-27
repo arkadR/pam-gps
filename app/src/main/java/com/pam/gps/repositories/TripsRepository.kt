@@ -54,6 +54,15 @@ open class TripsRepository {
       .map { Timber.d(it.toString()); it?.toObject<TripDetails>() }
   }
 
+  suspend fun getTripByTripDetailsId(tripDetailsId: String): Trip {
+    return dbCurrentUserTripsCollection
+      .whereEqualTo("details", tripDetailsId)
+      .get()
+      .await()
+      .first()
+      .toObject()
+  }
+
   fun getCurrentTrip(): Flow<CurrentTrip?> {
     return dbCurrentUserCurrentTripReference
       .asFlow()

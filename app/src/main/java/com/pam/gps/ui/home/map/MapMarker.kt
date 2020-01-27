@@ -8,22 +8,21 @@ import com.pam.gps.utils.PhotoLocationCache
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class MapMarker(private var location: LatLng, private val pictureUri: String) : ClusterItem, KoinComponent {
-
-  companion object {
-    fun fromPicture(pic: LocalPicture): MapMarker {
-      return MapMarker(pic.latLng!!, pic.uri)
-    }
-  }
+class MapMarker(
+  private var location: LatLng,
+  private val pictureUri: String,
+  private val tripTitle: String,
+  val tripDetailsId: String)
+  : ClusterItem, KoinComponent {
 
   private val localPhotoCache: LocalPhotoCache by inject()
   private val locationCache: PhotoLocationCache by inject()
 
   var localPath: String? = null
 
-  override fun getSnippet(): String = "Snippet"
+  override fun getSnippet(): String = ""
 
-  override fun getTitle(): String = "Title"
+  override fun getTitle(): String = tripTitle
 
   override fun getPosition(): LatLng = location
 

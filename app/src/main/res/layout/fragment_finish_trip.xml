@@ -39,19 +39,6 @@
             android:inputType="text" />
     </com.google.android.material.textfield.TextInputLayout>
 
-<!--    TODO[AR]: Change ic_no_photos -->
-    <ImageView
-        android:id="@+id/picture_no_data_image"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title_layout"
-        android:src="@drawable/ic_no_photos"
-        android:visibility="gone"
-        tools:ignore="ContentDescription" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pictures_recycler"
         android:layout_width="match_parent"
@@ -63,7 +50,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/picture_no_data_image"
+        app:layout_constraintTop_toBottomOf="@id/title_layout"
         tools:itemCount="20"
         tools:layoutManager="GridLayoutManager"
         tools:listitem="@layout/recycler_view_item_1"

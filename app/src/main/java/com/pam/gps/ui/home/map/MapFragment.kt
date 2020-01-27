@@ -9,12 +9,14 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.maps.android.clustering.ClusterManager
 import com.pam.gps.R
 import com.pam.gps.extensions.addPath
 import com.pam.gps.extensions.centerOnPath
+import com.pam.gps.ui.home.HomeFragmentDirections
 import kotlinx.android.synthetic.main.fragment_map.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collect
@@ -81,13 +83,20 @@ class MapFragment : Fragment() {
     map_frame.removeAllViews()
   }
 
+  private fun onItemClicked(marker: MapMarker) {
+    findNavController().navigate(
+      HomeFragmentDirections.actionNavigationHomeToTripFragmentMain(marker.tripDetailsId)
+    )
+  }
+
   private fun setUpClusterManager(googleMap: GoogleMap) {
     mClusterManager = ClusterManager(this.context, googleMap)
-    mClusterManager.renderer = IconMarkerManagerRenderer(requireContext(), googleMap, mClusterManager)
+    mClusterManager.renderer = IconMarkerManagerRenderer(
+      requireContext(), googleMap, mClusterManager, ::onItemClicked
+    )
     googleMap.setOnCameraIdleListener(mClusterManager)
     googleMap.setOnMarkerClickListener(mClusterManager)
     mClusterManager.setAnimation(true)
-    //TODO[AR] Change markers to photos, draw path from coords
     GlobalScope.launch {
       val markers = mapViewModel.mapMarkers
       markers.collect { marker ->
