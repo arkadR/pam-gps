@@ -35,7 +35,7 @@ class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
       when (menuItem.itemId) {
         R.id.logout ->{
           handleLogout()
-          navigation_view.visibility = View.GONE
+          dismiss()
         }
       }
       true
