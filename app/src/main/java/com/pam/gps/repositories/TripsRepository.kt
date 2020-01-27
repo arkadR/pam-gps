@@ -3,10 +3,7 @@ package com.pam.gps.repositories
 import android.net.Uri
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.CollectionReference
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestoreException
+import com.google.firebase.firestore.*
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
@@ -39,6 +36,7 @@ open class TripsRepository {
 
   fun getTrips(): Flow<List<Trip>> {
     return dbCurrentUserTripsCollection
+      .orderBy("date", Query.Direction.DESCENDING)
       .asFlow()
       .map { query ->
         query?.toObjects(Trip::class.java)
@@ -149,6 +147,7 @@ open class TripsRepository {
 
   fun getAllTripsDetails(): Flow<List<TripDetails>> {
     return dbTripsDetailsCollection
+      .orderBy("date", Query.Direction.DESCENDING)
       .asFlow()
       .map { query -> query?.toObjects(TripDetails::class.java) }
       .filterNotNull()
