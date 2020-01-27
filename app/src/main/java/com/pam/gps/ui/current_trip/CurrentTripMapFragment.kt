@@ -10,6 +10,7 @@ import androidx.lifecycle.observe
 import com.pam.gps.R
 import com.pam.gps.extensions.addPath
 import com.pam.gps.extensions.centerOnPath
+import com.pam.gps.extensions.withDecimalPlaces
 import kotlinx.android.synthetic.main.fragment_current_trip_map.*
 import kotlinx.android.synthetic.main.fragment_current_trip_map.view.*
 import kotlinx.android.synthetic.main.fragment_trip_details.distance_text
@@ -40,9 +41,9 @@ class CurrentTripMapFragment : Fragment() {
     super.onResume()
     currentTripViewModel.currentTrip.observe(viewLifecycleOwner) {
       if (it?.tripDetails == null) return@observe
-      duration_text.text = it.tripDetails.durationInSeconds().toString()
-      distance_text.text = it.tripDetails.distanceInKm().toString()
-      pace_text.text = it.tripDetails.paceInMinutesPerKm().toString()
+      distance_text.text = it.tripDetails.distanceInKm().withDecimalPlaces(2) + " km"
+      duration_text.text = (it.tripDetails.durationInSeconds()).toString() + "sec"
+      pace_text.text = it.tripDetails.paceInMinutesPerKm().withDecimalPlaces(2) + "min/km"
     }
     curr_map_fragment.getMapAsync { maps ->
       currentTripViewModel.currentTrip.observe(viewLifecycleOwner) { trip ->

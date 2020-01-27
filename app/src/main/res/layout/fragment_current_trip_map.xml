@@ -60,6 +60,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_trip_region"
@@ -70,6 +71,7 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_trip_distance"
@@ -110,6 +112,7 @@
         android:id="@+id/curr_map_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/duration_icon" />
 

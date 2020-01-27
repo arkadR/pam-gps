@@ -32,12 +32,12 @@ class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
     super.onActivityCreated(savedInstanceState)
 
     navigation_view.setNavigationItemSelectedListener { menuItem ->
-      // Bottom Navigation Drawer menu item clicks
       when (menuItem.itemId) {
-        R.id.logout -> handleLogout()
+        R.id.logout ->{
+          handleLogout()
+          dismiss()
+        }
       }
-      // Add code here to update the UI based on the item selected
-      // For example, swap UI fragments here
       true
     }
   }
