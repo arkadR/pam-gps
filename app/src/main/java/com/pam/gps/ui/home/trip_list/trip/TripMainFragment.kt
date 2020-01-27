@@ -82,4 +82,9 @@ class TripMainFragment : Fragment() {
       mapView.onResume()
     }
   }
+
+  override fun onPause() {
+    super.onPause()
+    details_map_view.removeView(mapView)
+  }
 }
