@@ -50,7 +50,7 @@ class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
           if (!TrackerService.isRunning.value) {
             FirebaseAuth.getInstance().signOut()
             withContext(Dispatchers.Main) {
-              findNavController().navigate(R.id.action_navigation_trip_to_navigation_login)
+              findNavController().navigate(R.id.action_global_navigation_login)
             }
             cancel()
           }
@@ -58,7 +58,7 @@ class BottomNavigationDrawerFragment : BottomSheetDialogFragment() {
       }
     } else {
       FirebaseAuth.getInstance().signOut()
-      findNavController().navigate(R.id.action_navigation_trip_to_navigation_login)
+      findNavController().navigate(R.id.action_global_navigation_login)
     }
   }
 }

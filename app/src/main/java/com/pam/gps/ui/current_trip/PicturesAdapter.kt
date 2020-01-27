@@ -19,7 +19,7 @@ class PicturesAdapter : RecyclerView.Adapter<PicturesAdapter.PictureViewHolder>(
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PictureViewHolder {
     val imageView = LayoutInflater
       .from(parent.context)
-      .inflate(R.layout.selectable_picture, parent, false)
+      .inflate(R.layout.layout_picture, parent, false)
     return PictureViewHolder(imageView as ImageView)
   }
 
