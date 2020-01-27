@@ -34,7 +34,7 @@ class CurrentTripPhotosFragment : Fragment() {
     currentTripViewModel.currentTrip.observe(viewLifecycleOwner) {
       if (it?.tripDetails == null) return@observe
       Timber.d("photos: ${it.tripDetails.pictures.size}")
-      adapter.setData(it.tripDetails.pictures.mapNotNull { pic -> pic.uri })
+      adapter.setData(it.tripDetails.pictures.mapNotNull { pic -> pic.storageRef })
     }
   }
 }
